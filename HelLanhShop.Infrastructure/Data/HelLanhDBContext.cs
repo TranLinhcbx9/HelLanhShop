@@ -20,9 +20,13 @@ namespace HelLanhShop.Infrastructure.Data
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ComboTemplate> ComboTemplates { get; set; }
         public virtual DbSet<ComboTemplateItem> ComboTemplateItems { get; set; }
+        public virtual DbSet<InventoryEntryDetail> InventoryEntryDetails { get; set; }
         public virtual DbSet<InventoryEntry> InventoryEntries { get; set; }
         public virtual DbSet<Sale> Sales { get; set; }
+        public virtual DbSet<SaleDetail> SaleDetails { get; set; }
         public virtual DbSet<Supplier> Suppliers { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -59,7 +63,19 @@ namespace HelLanhShop.Infrastructure.Data
             // FK tự nhận nhờ virtual + navigation property
         }
 
+        public override int SaveChanges()
+        {
+            AutoUpdateTime();
+            RoundDecimalProperties();
+            return base.SaveChanges();
+        }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            AutoUpdateTime();
+            RoundDecimalProperties();
+            return await base.SaveChangesAsync(cancellationToken);
+        }
+        private void AutoUpdateTime()
         {
             var entries = ChangeTracker.Entries<BaseEntity>();
 
@@ -75,9 +91,23 @@ namespace HelLanhShop.Infrastructure.Data
                     entry.Entity.UpdatedAt = DateTime.UtcNow;
                 }
             }
-
-            return await base.SaveChangesAsync(cancellationToken);
         }
 
+        private void RoundDecimalProperties()
+        {
+            // 🔹 Khi SaveChanges, tất cả decimal sẽ được làm tròn
+            var entries = ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added || e.State == EntityState.Modified);
+
+            foreach (var entry in entries)
+            {
+                foreach (var property in entry.Properties
+                    .Where(p => p.CurrentValue != null && p.Metadata.ClrType == typeof(decimal)))
+                {
+                    var value = (decimal)property.CurrentValue!;
+                    property.CurrentValue = Math.Round(value, 2, MidpointRounding.AwayFromZero);
+                }
+            }
+        }
     }
 }

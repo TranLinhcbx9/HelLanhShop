@@ -10,12 +10,14 @@ namespace HelLanhShop.Domain.Entities
     public partial class ComboTemplateItem : BaseEntity
     {
         public int Id { get; set; }
-        public int ComboTemplateId { get; set; }  // FK ComboTemplate
-        public int ProductId { get; set; }        // FK Product
-        public int? Ratio { get; set; }            // tỉ lệ để tính gram
 
-        // Navigation properties
-        public virtual ComboTemplate? ComboTemplate { get; set; }
-        public virtual Product? Product { get; set; }
+        public int ComboTemplateId { get; set; }
+        public ComboTemplate? ComboTemplate { get; set; }
+
+        public int ProductId { get; set; }
+        public Product? Product { get; set; }
+
+        public decimal WeightGram { get; set; }    // Số gram cho sản phẩm này trong combo
+        public decimal? Ratio { get; set; } // tỉ trọng, vd: 0.4 (40%)
     }
 }

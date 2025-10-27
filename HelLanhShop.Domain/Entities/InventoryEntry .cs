@@ -7,19 +7,20 @@ using System.Threading.Tasks;
 
 namespace HelLanhShop.Domain.Entities
 {
+    // Nhap hang
     public partial class InventoryEntry : BaseEntity
     {
         public int Id { get; set; }
-        public int ProductId { get; set; }       // FK Product
-        public decimal Quantity { get; set; }    // số lượng nhập
-        public decimal Cost { get; set; }        // giá nhập lần này
-        public DateTime EntryDate { get; set; }
+        public DateTime EntryDate { get; set; } = DateTime.UtcNow;
+        public string? Note { get; set; }
 
-        // Nếu muốn thêm nguồn hàng
+        // FK đến Supplier
+        public int? EmployeeId { get; set; }
+        public Employee? Employee { get; set; }
         public int? SupplierId { get; set; }
-        public virtual Supplier? Supplier { get; set; }
+        public Supplier? Supplier { get; set; }
 
-        // Navigation property
-        public virtual Product? Product { get; set; }
+        // Navigation
+        public ICollection<InventoryEntryDetail>? InventoryEntryDetails { get; set; }
     }
 }

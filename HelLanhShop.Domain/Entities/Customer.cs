@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace HelLanhShop.Domain.Entities
 {
-    public partial class Supplier : BaseEntity
+    public class Customer : BaseEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;      // Tên nhà cung cấp
+        public string Name { get; set; } = string.Empty;
         public string? Phone { get; set; }
         public string? Address { get; set; }
 
         // Navigation
-        public ICollection<InventoryEntry>? InventoryEntries { get; set; }
+        public ICollection<Sale>? Sales { get; set; }
     }
 }

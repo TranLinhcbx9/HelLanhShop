@@ -10,9 +10,12 @@ namespace HelLanhShop.Domain.Entities
     public partial class ComboTemplate :BaseEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;  // tên combo
+        public string Name { get; set; } = string.Empty;   // Tên combo
+        public string? Description { get; set; }           // Mô tả
+        public decimal Price { get; set; }                 // Giá bán combo
+        public decimal? TotalWeight { get; set; }          // Tổng khối lượng (nếu có)
 
-        // Combo có nhiều item (tỉ lệ từng loại)
-        public virtual ICollection<ComboTemplateItem>? Items { get; set; }
+        // Navigation
+        public ICollection<ComboTemplateItem>? ComboTemplateItems { get; set; }
     }
 }

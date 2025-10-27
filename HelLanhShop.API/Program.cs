@@ -1,4 +1,11 @@
+using HelLanhShop.Infrastructure.Data;
+using System;
+using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<HelLanhDBContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 // Add services to the container.
 

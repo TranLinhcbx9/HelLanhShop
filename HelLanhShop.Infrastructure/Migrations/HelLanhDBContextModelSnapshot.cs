@@ -51,7 +51,7 @@ namespace HelLanhShop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ComboTemplates");
+                    b.ToTable("ComboTemplates", (string)null);
                 });
 
             modelBuilder.Entity("HelLanhShop.Domain.Entities.ComboTemplateItem", b =>
@@ -86,7 +86,7 @@ namespace HelLanhShop.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ComboTemplateItems");
+                    b.ToTable("ComboTemplateItems", (string)null);
                 });
 
             modelBuilder.Entity("HelLanhShop.Domain.Entities.Customer", b =>
@@ -115,7 +115,7 @@ namespace HelLanhShop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("HelLanhShop.Domain.Entities.Employee", b =>
@@ -147,7 +147,7 @@ namespace HelLanhShop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Employees");
+                    b.ToTable("Employees", (string)null);
                 });
 
             modelBuilder.Entity("HelLanhShop.Domain.Entities.InventoryEntry", b =>
@@ -182,7 +182,7 @@ namespace HelLanhShop.Infrastructure.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("InventoryEntries");
+                    b.ToTable("InventoryEntries", (string)null);
                 });
 
             modelBuilder.Entity("HelLanhShop.Domain.Entities.InventoryEntryDetail", b =>
@@ -217,7 +217,7 @@ namespace HelLanhShop.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("InventoryEntryDetails");
+                    b.ToTable("InventoryEntryDetails", (string)null);
                 });
 
             modelBuilder.Entity("HelLanhShop.Domain.Entities.Product", b =>
@@ -256,7 +256,7 @@ namespace HelLanhShop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("HelLanhShop.Domain.Entities.Sale", b =>
@@ -291,7 +291,7 @@ namespace HelLanhShop.Infrastructure.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.ToTable("Sales");
+                    b.ToTable("Sales", (string)null);
                 });
 
             modelBuilder.Entity("HelLanhShop.Domain.Entities.SaleDetail", b =>
@@ -326,7 +326,7 @@ namespace HelLanhShop.Infrastructure.Migrations
 
                     b.HasIndex("SaleId");
 
-                    b.ToTable("SaleDetails");
+                    b.ToTable("SaleDetails", (string)null);
                 });
 
             modelBuilder.Entity("HelLanhShop.Domain.Entities.Supplier", b =>
@@ -355,7 +355,7 @@ namespace HelLanhShop.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Suppliers");
+                    b.ToTable("Suppliers", (string)null);
                 });
 
             modelBuilder.Entity("HelLanhShop.Domain.Entities.ComboTemplateItem", b =>

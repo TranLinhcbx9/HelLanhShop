@@ -18,8 +18,4 @@
     <ProjectReference Include="..\HelLanhShop.Application\HelLanhShop.Application.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>

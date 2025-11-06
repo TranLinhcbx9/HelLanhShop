@@ -14,6 +14,5 @@ namespace HelLanhShop.Infrastructure.Repositories
         public ComboTemplateRepository(HelLanhDBContext context) : base(context)
         {
         }   
-    {
     }
 }

@@ -14,6 +14,5 @@ namespace HelLanhShop.Infrastructure.Repositories
         public EmployeeRepository(HelLanhDBContext context) : base(context)
         {
         }
-    {
     }
 }

@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HelLanhShop.Domain\HelLanhShop.Domain.csproj" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 
 </Project>

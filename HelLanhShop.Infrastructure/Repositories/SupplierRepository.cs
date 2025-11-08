@@ -1,4 +1,4 @@
-﻿using HelLanhShop.Application.Interfaces.Repositories;
+﻿using HelLanhShop.Application.Suppliers.Interfaces;
 using HelLanhShop.Domain.Entities;
 using HelLanhShop.Infrastructure.Data;
 using System;

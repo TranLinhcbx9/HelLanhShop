@@ -11,7 +11,28 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\Services\" />
+    <Folder Include="ComboTemplateItems\DTOs\" />
+    <Folder Include="ComboTemplateItems\Services\" />
+    <Folder Include="ComboTemplates\DTOs\" />
+    <Folder Include="ComboTemplates\Services\" />
+    <Folder Include="Common\DTOs\" />
+    <Folder Include="Common\Mapping\" />
+    <Folder Include="Customers\DTOs\" />
+    <Folder Include="Customers\Services\" />
+    <Folder Include="Employees\DTOs\" />
+    <Folder Include="Employees\Services\" />
+    <Folder Include="InventoryEntries\DTOs\" />
+    <Folder Include="InventoryEntries\Services\" />
+    <Folder Include="InventoryEntryDetails\DTOs\" />
+    <Folder Include="InventoryEntryDetails\Services\" />
+    <Folder Include="Products\DTOs\" />
+    <Folder Include="Products\Services\" />
+    <Folder Include="SaleDetails\DTOs\" />
+    <Folder Include="SaleDetails\Services\" />
+    <Folder Include="Sales\DTOs\" />
+    <Folder Include="Sales\Services\" />
+    <Folder Include="Suppliers\DTOs\" />
+    <Folder Include="Suppliers\Services\" />
   </ItemGroup>
 
 </Project>

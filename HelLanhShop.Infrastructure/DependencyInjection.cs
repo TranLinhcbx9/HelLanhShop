@@ -1,4 +1,13 @@
-﻿using HelLanhShop.Application.Interfaces.Repositories;
+﻿using HelLanhShop.Application.ComboTemplateItems.Interfaces;
+using HelLanhShop.Application.ComboTemplates.Interfaces;
+using HelLanhShop.Application.Customers.Interfaces;
+using HelLanhShop.Application.Employees.Interfaces;
+using HelLanhShop.Application.InventoryEntries.Interfaces;
+using HelLanhShop.Application.InventoryEntryDetails.Interfaces;
+using HelLanhShop.Application.Products.Interfaces;
+using HelLanhShop.Application.SaleDetails.Interfaces;
+using HelLanhShop.Application.Sales.Interfaces;
+using HelLanhShop.Application.Suppliers.Interfaces;
 using HelLanhShop.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using System;

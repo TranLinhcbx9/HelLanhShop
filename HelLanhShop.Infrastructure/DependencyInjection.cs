@@ -1,5 +1,6 @@
 ﻿using HelLanhShop.Application.ComboTemplateItems.Interfaces;
 using HelLanhShop.Application.ComboTemplates.Interfaces;
+using HelLanhShop.Application.Common.Interfaces;
 using HelLanhShop.Application.Customers.Interfaces;
 using HelLanhShop.Application.Employees.Interfaces;
 using HelLanhShop.Application.InventoryEntries.Interfaces;
@@ -32,6 +33,7 @@ namespace HelLanhShop.Infrastructure
             services.AddScoped<ISaleDetailRepository, SaleDetailRepository>();
             services.AddScoped<ISaleRepository, SaleRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }

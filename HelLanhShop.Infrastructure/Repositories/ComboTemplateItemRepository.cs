@@ -1,4 +1,4 @@
-﻿using HelLanhShop.Application.Interfaces.Repositories;
+﻿using HelLanhShop.Application.ComboTemplateItems.Interfaces;
 using HelLanhShop.Infrastructure.Data;
 using System;
 using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿using HelLanhShop.Application.Interfaces.Repositories;
+﻿using HelLanhShop.Application.Common.Interfaces;
 using HelLanhShop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;

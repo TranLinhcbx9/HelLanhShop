@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HelLanhShop.Application.Interfaces.Repositories
+namespace HelLanhShop.Application.Common.Interfaces
 {
     public interface IGenericRepository<T> where T : class
     {

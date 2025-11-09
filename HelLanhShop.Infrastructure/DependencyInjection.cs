@@ -6,6 +6,7 @@ using HelLanhShop.Application.Employees.Interfaces;
 using HelLanhShop.Application.InventoryEntries.Interfaces;
 using HelLanhShop.Application.InventoryEntryDetails.Interfaces;
 using HelLanhShop.Application.Products.Interfaces;
+using HelLanhShop.Application.Products.Services;
 using HelLanhShop.Application.SaleDetails.Interfaces;
 using HelLanhShop.Application.Sales.Interfaces;
 using HelLanhShop.Application.Suppliers.Interfaces;
@@ -23,6 +24,7 @@ namespace HelLanhShop.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
+            //repositories
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IComboTemplateItemRepository, ComboTemplateItemRepository>();
             services.AddScoped<IComboTemplateRepository, ComboTemplateRepository>();
@@ -33,7 +35,12 @@ namespace HelLanhShop.Infrastructure
             services.AddScoped<ISaleDetailRepository, SaleDetailRepository>();
             services.AddScoped<ISaleRepository, SaleRepository>();
             services.AddScoped<ISupplierRepository, SupplierRepository>();
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            //services
+            services.AddScoped<IProductService, ProductService>();
+
 
             return services;
         }

@@ -16,7 +16,6 @@
     <Folder Include="ComboTemplates\DTOs\" />
     <Folder Include="ComboTemplates\Services\" />
     <Folder Include="Common\DTOs\" />
-    <Folder Include="Common\Mapping\" />
     <Folder Include="Customers\DTOs\" />
     <Folder Include="Customers\Services\" />
     <Folder Include="Employees\DTOs\" />
@@ -25,14 +24,17 @@
     <Folder Include="InventoryEntries\Services\" />
     <Folder Include="InventoryEntryDetails\DTOs\" />
     <Folder Include="InventoryEntryDetails\Services\" />
-    <Folder Include="Products\DTOs\" />
-    <Folder Include="Products\Services\" />
     <Folder Include="SaleDetails\DTOs\" />
     <Folder Include="SaleDetails\Services\" />
     <Folder Include="Sales\DTOs\" />
     <Folder Include="Sales\Services\" />
     <Folder Include="Suppliers\DTOs\" />
     <Folder Include="Suppliers\Services\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
   </ItemGroup>
 
 </Project>

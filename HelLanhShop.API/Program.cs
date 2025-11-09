@@ -1,7 +1,8 @@
-using HelLanhShop.Infrastructure.Data;
+using HelLanhShop.Application.Common.Mappings;
 using HelLanhShop.Infrastructure;
-using System;
+using HelLanhShop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using System;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<HelLanhDBContext>(options =>
@@ -16,6 +17,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure();
+
+//mapping profile
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var app = builder.Build();
 

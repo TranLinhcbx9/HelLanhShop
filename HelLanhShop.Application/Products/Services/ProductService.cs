@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using HelLanhShop.Domain.Entities;
 using HelLanhShop.Application.Products.DTOs;
+using HelLanhShop.Application.Common.Models;
 
 namespace HelLanhShop.Application.Products.Services
 {
@@ -20,50 +21,88 @@ namespace HelLanhShop.Application.Products.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<CreateProduct> CreateAsync(CreateProduct createProduct)
+        public async Task<Result<List<ProductDto>>> GetAllAsync()
         {
-            var product = _mapper.Map<Product>(createProduct);
-            await _unitOfWork.Products.AddAsync(product);
-            await _unitOfWork.SaveChangesAsync();
-            return _mapper.Map<CreateProduct>(product);
+            try
+            {
+                var products = await _unitOfWork.Products.GetAllAsync(); // trả List<Product>
+                var dtos = _mapper.Map<List<ProductDto>>(products ?? new List<Product>());
+                return Result<List<ProductDto>>.Success(dtos);
+            }
+            catch (Exception ex)
+            {
+                return Result<List<ProductDto>>.Failure(ex.Message);
+            }
+        }
+        
+        public async Task<Result<PagedResult<ProductDto>>> GetAllPagingAsync(int pageIndex, int pageSize)
+        {
+            try
+            {
+                var pagedProducts = await _unitOfWork.Products.GetPagedAsync(pageIndex, pageSize); 
+                var dtos = _mapper.Map<List<ProductDto>>(pagedProducts.Data);
+                var pagedDto = PagedResult<ProductDto>.Success(dtos, pagedProducts.PageIndex, pagedProducts.PageSize, pagedProducts.TotalItems);
+                return Result<PagedResult<ProductDto>>.Success(pagedDto);
+            }
+            catch (Exception ex)
+            {
+                return Result<PagedResult<ProductDto>>.Failure(ex.Message);
+            }
         }
 
-        public async Task<ProductDto> DeleteAsync(int id)
+        public async Task<Result<CreateProductDto>> CreateAsync(CreateProductDto createProduct)
+        {
+            try
+            {
+                var product = _mapper.Map<Product>(createProduct);
+                await _unitOfWork.Products.AddAsync(product);
+                await _unitOfWork.SaveChangesAsync();
+                var dto = _mapper.Map<CreateProductDto>(product);
+                return  Result<CreateProductDto>.Success(dto);
+            }
+            catch (Exception ex)
+            {
+                return Result<CreateProductDto>.Failure(ex.Message);
+            }
+        }
+
+        public async Task<Result<ProductDto>> DeleteAsync(int id)
         {
             var product = await _unitOfWork.Products.GetByIdAsync(id);
             if (product == null)
             {
-                throw new Exception("Product not found");
+                return Result<ProductDto>.Failure("Product Not Found");
             }
             _unitOfWork.Products.Delete(product);
             await _unitOfWork.SaveChangesAsync();
-            return _mapper.Map<ProductDto>(product);
+            var dto = _mapper.Map<ProductDto>(product);
+            return Result<ProductDto>.Success(dto);
         }
 
-        public async Task<IEnumerable<ProductDto>> GetAllAsync()
-        {
-            var productlist = await _unitOfWork.Products.GetAllAsync();
-            return _mapper.Map<IEnumerable<ProductDto>>(productlist);
-        }
 
-        public async Task<ProductDto?> GetByIdAsync(int id)
+        public async Task<Result<ProductDto?>> GetByIdAsync(int id)
         {
             var product = await _unitOfWork.Products.GetByIdAsync(id);
-            if (product == null) return null;
-            return _mapper.Map<ProductDto>(product);
+            if (product == null)
+            { 
+                return Result<ProductDto?>.Failure("Product Not Found");
+            }
+            var dto = _mapper.Map<ProductDto?>(product);
+            return Result<ProductDto?>.Success(dto);
         }
 
-        public async Task<UpdateProduct> UpdateAsync(UpdateProduct updateProduct)
+        public async Task<Result<UpdateProductDto>> UpdateAsync(UpdateProductDto updateProduct)
         {
             var product = await _unitOfWork.Products.GetByIdAsync(updateProduct.Id);
             if (product == null)
             {
-                throw new Exception("Product not found");
+                return Result<UpdateProductDto>.Failure("Product Not Found");
             }
             _mapper.Map(updateProduct, product);
             _unitOfWork.Products.Update(product);
             await _unitOfWork.SaveChangesAsync();
-            return _mapper.Map<UpdateProduct>(product);
+            var dto = _mapper.Map<UpdateProductDto>(product);
+            return Result<UpdateProductDto>.Success(dto);
         }
     }
 }

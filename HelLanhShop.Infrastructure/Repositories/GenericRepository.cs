@@ -1,4 +1,5 @@
 ﻿using HelLanhShop.Application.Common.Interfaces;
+using HelLanhShop.Application.Common.Models;
 using HelLanhShop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -47,6 +48,21 @@ namespace HelLanhShop.Infrastructure.Repositories
         public void Update(T entity)
         {
             _dbSet.Update(entity);
+        }
+        public IQueryable<T> Query()
+        {
+            return _dbSet.AsQueryable();
+        }
+        public async Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize)
+        {
+            var query = _dbSet.AsQueryable();
+            var total = await query.CountAsync();
+            var data = await query.Skip((pageIndex - 1) * pageSize)
+                                  .Take(pageSize)
+                                  .ToListAsync();
+
+
+            return PagedResult<T>.Success(data, pageIndex, pageSize, total);
         }
     }
 }

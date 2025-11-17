@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HelLanhShop.Application.Common.Models;
 
 namespace HelLanhShop.Application.Products.Interfaces
 {
     public interface IProductService
     {
-        Task<IEnumerable<ProductDto>> GetAllAsync();
-        Task<ProductDto?> GetByIdAsync(int id);
-        Task<CreateProduct> CreateAsync(CreateProduct createProduct);
-        Task<UpdateProduct> UpdateAsync(UpdateProduct updateProduct);
-        Task<ProductDto> DeleteAsync(int id);
+        Task<Result<List<ProductDto>>> GetAllAsync();
+        Task<Result<PagedResult<ProductDto>>> GetAllPagingAsync(int pageIndex, int pageSize);
+        Task<Result<ProductDto?>> GetByIdAsync(int id);
+        Task<Result<CreateProductDto>> CreateAsync(CreateProductDto createProduct);
+        Task<Result<UpdateProductDto>> UpdateAsync(UpdateProductDto updateProduct);
+        Task<Result<ProductDto>> DeleteAsync(int id);
     }
 }

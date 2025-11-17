@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HelLanhShop.Application.Common.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,8 @@ namespace HelLanhShop.Application.Common.Interfaces
         void Update(T entity);
         void Delete(T entity);
         Task SaveChangesAsync();
+        IQueryable<T> Query();
+        Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize);
+
     }
 }

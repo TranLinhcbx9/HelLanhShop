@@ -1,4 +1,6 @@
-﻿using HelLanhShop.Application.Products.DTOs;
+﻿using HelLanhShop.API.Common.ApiResponse;
+using HelLanhShop.Application.Common.Models;
+using HelLanhShop.Application.Products.DTOs;
 using HelLanhShop.Application.Products.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,35 +16,66 @@ namespace HelLanhShop.API.Controllers.Product
             _productService = productService;
         }
         [HttpGet("GetAll")]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<List<ProductDto>>> GetAll()
         {
-            var data = await _productService.GetAllAsync();
-            return Ok(data);
+            var result = await _productService.GetAllAsync();
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, ApiResponse.Fail(result.Error!));
+            }
+            return Ok(ApiResponse<List<ProductDto>>.Ok(result.Data!));
+        }
+        [HttpGet("GetAllPaging")]
+        public async Task<ActionResult<PagedResult<ProductDto>>> GetAllPagingAsync(int pageIndex = 1, int pageSize = 10)
+        {
+            var result = await _productService.GetAllPagingAsync(pageIndex, pageSize);
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, ApiResponse.Fail(result.Error!));
+            }
+            return Ok(ApiResponse<PagedResult<ProductDto>>.Ok(result.Data!));
         }
         [HttpGet("GetById/{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<ProductDto>> GetById(int id)
         {
-            var data = await _productService.GetByIdAsync(id);
-            return data == null ? NotFound() : Ok(data);
+            var result = await _productService.GetByIdAsync(id);
+            if (!result.IsSuccess)
+            {
+                return NotFound(ApiResponse.Fail(result.Error!));
+            }
+            return Ok(ApiResponse<ProductDto?>.Ok(result.Data!));
         }
         [HttpPost("Create")]
-        public async Task<IActionResult> Create([FromBody] CreateProduct createProduct)
+        public async Task<ActionResult<CreateProductDto>> Create([FromBody] CreateProductDto createProduct)
         {
-            await _productService.CreateAsync(createProduct);
-            return Ok(createProduct);
+            var result = await _productService.CreateAsync(createProduct);
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, ApiResponse<CreateProductDto>.Fail(result.Error!));
+            }
+            return Ok(ApiResponse<CreateProductDto>.Ok(result.Data!));
         }
         [HttpPut("Update")]
-        public async Task<IActionResult> Update([FromBody] UpdateProduct updateProduct)
+        public async Task<ActionResult<UpdateProductDto>> Update([FromBody] UpdateProductDto updateProduct)
         {
-            await _productService.UpdateAsync(updateProduct);
-            return Ok(updateProduct);
+            var result = await _productService.UpdateAsync(updateProduct);
+            if (!result.IsSuccess)
+            {
+                return NotFound(ApiResponse.Fail(result.Error));
+            }
+            return Ok(ApiResponse<UpdateProductDto>.Ok(result.Data!));
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult<ProductDto>> Delete(int id)
         {
-            await _productService.DeleteAsync(id);
-            return Ok();
+            var result = await _productService.DeleteAsync(id);
+            if (!result.IsSuccess)
+            {
+                return NotFound(ApiResponse.Fail(result.Error));
+            }
+            return Ok(ApiResponse<ProductDto>.Ok(result.Data));
         }
     }
 }

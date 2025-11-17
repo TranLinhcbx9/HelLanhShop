@@ -15,10 +15,10 @@ namespace HelLanhShop.Application.Common.Mappings
         {
             CreateMap<Product, ProductDto>();
             CreateMap<ProductDto, Product>();
-            CreateMap<Product, CreateProduct>();
-            CreateMap<CreateProduct, Product>();
-            CreateMap<Product, UpdateProduct>();
-            CreateMap<UpdateProduct, Product>();
+            CreateMap<Product, CreateProductDto>();
+            CreateMap<CreateProductDto, Product>();
+            CreateMap<Product, UpdateProductDto>();
+            CreateMap<UpdateProductDto, Product>();
         }
     }
 }

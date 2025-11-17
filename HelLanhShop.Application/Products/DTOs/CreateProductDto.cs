@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace HelLanhShop.Application.Products.DTOs
 {
-    public class UpdateProduct
+    public class CreateProductDto
     {
-        public int Id { get; set; }
         public string Name { get; set; } = string.Empty;   // Tên trái cây
         public decimal CostPrice { get; set; }             // Giá nhập trung bình
         public decimal UnitPrice { get; set; }             // Giá bán

@@ -14,9 +14,9 @@ namespace HelLanhShop.Application.Common.Interfaces
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
-        Task SaveChangesAsync();
+        //Task SaveChangesAsync();
         IQueryable<T> Query();
-        Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize);
+        Task<PagedResult<T>> GetPagedAsync(IQueryable<T> query, int pageIndex, int pageSize, string? sortField = null, string? sortDir = "asc");
 
     }
 }

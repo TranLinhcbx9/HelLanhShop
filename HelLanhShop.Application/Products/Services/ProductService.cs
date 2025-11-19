@@ -1,14 +1,16 @@
-﻿using HelLanhShop.Application.Common.Interfaces;
+﻿using AutoMapper;
+using HelLanhShop.Application.Common.Interfaces;
+using HelLanhShop.Application.Common.Models;
+using HelLanhShop.Application.Common.Services;
+using HelLanhShop.Application.Products.DTOs;
+using HelLanhShop.Application.Products.Filters;
 using HelLanhShop.Application.Products.Interfaces;
-using AutoMapper;
+using HelLanhShop.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using HelLanhShop.Domain.Entities;
-using HelLanhShop.Application.Products.DTOs;
-using HelLanhShop.Application.Common.Models;
 
 namespace HelLanhShop.Application.Products.Services
 {
@@ -16,10 +18,13 @@ namespace HelLanhShop.Application.Products.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
+        private readonly IGenericService<Product> _genericService;
+
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IGenericService<Product> baseService)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _genericService = baseService;
         }
         public async Task<Result<List<ProductDto>>> GetAllAsync()
         {
@@ -39,7 +44,8 @@ namespace HelLanhShop.Application.Products.Services
         {
             try
             {
-                var pagedProducts = await _unitOfWork.Products.GetPagedAsync(pageIndex, pageSize); 
+                var query = _unitOfWork.Products.Query();
+                var pagedProducts = await _unitOfWork.Products.GetPagedAsync(query, pageIndex, pageSize); 
                 var dtos = _mapper.Map<List<ProductDto>>(pagedProducts.Data);
                 var pagedDto = PagedResult<ProductDto>.Success(dtos, pagedProducts.PageIndex, pagedProducts.PageSize, pagedProducts.TotalItems);
                 return Result<PagedResult<ProductDto>>.Success(pagedDto);
@@ -104,5 +110,10 @@ namespace HelLanhShop.Application.Products.Services
             var dto = _mapper.Map<UpdateProductDto>(product);
             return Result<UpdateProductDto>.Success(dto);
         }
-    }
+
+        public Task<PagedResult<ProductDto>> SearchAsync(ProductFilter filter)
+        {
+            return _genericService.SearchAsync<ProductDto>(filter);
+        }
+    }   
 }

@@ -28,6 +28,7 @@ namespace HelLanhShop.Application.Common.Interfaces
         ISaleDetailRepository SaleDetails { get; }
         ISaleRepository Sales { get; }
         ISupplierRepository Suppliers { get; }
+        IGenericRepository<T> GenericRepository<T>() where T : class;
         Task<int> SaveChangesAsync();
 
     }

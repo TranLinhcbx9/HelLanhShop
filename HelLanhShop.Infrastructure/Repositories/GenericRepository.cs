@@ -40,10 +40,10 @@ namespace HelLanhShop.Infrastructure.Repositories
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
-        }
+        //public async Task SaveChangesAsync()
+        //{
+        //    await _context.SaveChangesAsync();
+        //}
 
         public void Update(T entity)
         {
@@ -53,9 +53,14 @@ namespace HelLanhShop.Infrastructure.Repositories
         {
             return _dbSet.AsQueryable();
         }
-        public async Task<PagedResult<T>> GetPagedAsync(int pageIndex, int pageSize)
+        public async Task<PagedResult<T>> GetPagedAsync(IQueryable<T> query, int pageIndex, int pageSize, string? sortField = null, string? sortDir = "asc")
         {
-            var query = _dbSet.AsQueryable();
+            if (!string.IsNullOrEmpty(sortField))
+            {
+                query = sortDir!.ToLower() == "desc"
+                    ? query.OrderByDescending(x => EF.Property<object>(x, sortField))
+                    : query.OrderBy(x => EF.Property<object>(x, sortField));
+            }
             var total = await query.CountAsync();
             var data = await query.Skip((pageIndex - 1) * pageSize)
                                   .Take(pageSize)

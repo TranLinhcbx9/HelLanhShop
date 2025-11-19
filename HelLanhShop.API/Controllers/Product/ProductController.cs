@@ -1,6 +1,7 @@
 ﻿using HelLanhShop.API.Common.ApiResponse;
 using HelLanhShop.Application.Common.Models;
 using HelLanhShop.Application.Products.DTOs;
+using HelLanhShop.Application.Products.Filters;
 using HelLanhShop.Application.Products.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -62,7 +63,7 @@ namespace HelLanhShop.API.Controllers.Product
             var result = await _productService.UpdateAsync(updateProduct);
             if (!result.IsSuccess)
             {
-                return NotFound(ApiResponse.Fail(result.Error));
+                return NotFound(ApiResponse.Fail(result.Error!));
             }
             return Ok(ApiResponse<UpdateProductDto>.Ok(result.Data!));
         }
@@ -73,9 +74,16 @@ namespace HelLanhShop.API.Controllers.Product
             var result = await _productService.DeleteAsync(id);
             if (!result.IsSuccess)
             {
-                return NotFound(ApiResponse.Fail(result.Error));
+                return NotFound(ApiResponse.Fail(result.Error!));
             }
-            return Ok(ApiResponse<ProductDto>.Ok(result.Data));
+            return Ok(ApiResponse<ProductDto>.Ok(result.Data!));
+        }
+        [HttpPost("Search")]
+        public async Task<ActionResult<PagedResult<ProductDto>>> Search([FromBody] ProductFilter filter)
+        {
+            var result = await _productService.SearchAsync(filter);
+            
+            return Ok(ApiResponse<PagedResult<ProductDto>>.Ok(result));
         }
     }
 }

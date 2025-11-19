@@ -10,6 +10,7 @@ using HelLanhShop.Application.SaleDetails.Interfaces;
 using HelLanhShop.Application.Sales.Interfaces;
 using HelLanhShop.Application.Suppliers.Interfaces;
 using HelLanhShop.Infrastructure.Data;
+using HelLanhShop.Infrastructure.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,8 @@ namespace HelLanhShop.Infrastructure
     public class UnitOfWork : IUnitOfWork
     {
         private readonly HelLanhDBContext _context;
+        private readonly Dictionary<Type, object> _repositories = new();
+
         public IComboTemplateItemRepository ComboTemplateItems { get; }
         public IComboTemplateRepository ComboTemplates { get; }
         public ICustomerRepository Customers { get; }
@@ -56,10 +59,23 @@ namespace HelLanhShop.Infrastructure
             Sales = saleRepo;
             Suppliers = supplierRepo;
         }
-
+        public IGenericRepository<T> GenericRepository<T>() where T : class
+        {
+            var type = typeof(T);
+            if (!_repositories.ContainsKey(type))
+            {
+                var repo = new GenericRepository<T>(_context);
+                _repositories[type] = repo;
+            }
+            return (IGenericRepository<T>)_repositories[type];
+        }
         public async Task<int> SaveChangesAsync()
         {
             return await  _context.SaveChangesAsync();
+        }
+        public void Dispose()
+        {
+            _context.Dispose();
         }
     }
 }

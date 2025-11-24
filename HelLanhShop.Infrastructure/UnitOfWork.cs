@@ -6,9 +6,11 @@ using HelLanhShop.Application.Employees.Interfaces;
 using HelLanhShop.Application.InventoryEntries.Interfaces;
 using HelLanhShop.Application.InventoryEntryDetails.Interfaces;
 using HelLanhShop.Application.Products.Interfaces;
+using HelLanhShop.Application.RefreshTokens.Interfaces;
 using HelLanhShop.Application.SaleDetails.Interfaces;
 using HelLanhShop.Application.Sales.Interfaces;
 using HelLanhShop.Application.Suppliers.Interfaces;
+using HelLanhShop.Application.Users.Interfaces;
 using HelLanhShop.Infrastructure.Data;
 using HelLanhShop.Infrastructure.Repositories;
 using System;
@@ -34,6 +36,8 @@ namespace HelLanhShop.Infrastructure
         public ISaleDetailRepository SaleDetails { get; }
         public ISaleRepository Sales { get; }
         public ISupplierRepository Suppliers { get; }
+        public IUserRepository Users { get; }
+        public IRefreshTokenRepository RefreshTokens { get; }
 
         public UnitOfWork (HelLanhDBContext dbcontext, 
                                         IComboTemplateItemRepository templateItemRepo, 
@@ -45,7 +49,9 @@ namespace HelLanhShop.Infrastructure
                                         IProductRepository productRepo,
                                         ISaleDetailRepository saleDetailRepo,
                                         ISaleRepository saleRepo,
-                                        ISupplierRepository supplierRepo)
+                                        ISupplierRepository supplierRepo,
+                                        IUserRepository userRepo,
+                                        IRefreshTokenRepository refreshTokenRepo)
         {
             _context = dbcontext;
             ComboTemplateItems = templateItemRepo;
@@ -58,6 +64,8 @@ namespace HelLanhShop.Infrastructure
             SaleDetails = saleDetailRepo;
             Sales = saleRepo;
             Suppliers = supplierRepo;
+            Users = userRepo;
+            RefreshTokens = refreshTokenRepo;
         }
         public IGenericRepository<T> GenericRepository<T>() where T : class
         {

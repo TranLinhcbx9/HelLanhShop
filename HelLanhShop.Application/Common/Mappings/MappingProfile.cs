@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HelLanhShop.Application.Authentications.DTOs;
 using HelLanhShop.Application.Products.DTOs;
 using HelLanhShop.Domain.Entities;
 using System;
@@ -19,6 +20,11 @@ namespace HelLanhShop.Application.Common.Mappings
             CreateMap<CreateProductDto, Product>();
             CreateMap<Product, UpdateProductDto>();
             CreateMap<UpdateProductDto, Product>();
+
+            CreateMap<User, LoginResponseDto>()
+            .ForMember(dest => dest.Token, opt => opt.Ignore())
+            .ForMember(dest => dest.Expiration, opt => opt.Ignore())
+            .ForMember(dest => dest.RefreshToken, opt => opt.Ignore());
         }
     }
 }

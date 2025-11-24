@@ -27,6 +27,8 @@ namespace HelLanhShop.Infrastructure.Data
         public virtual DbSet<Supplier> Suppliers { get; set; }
         public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

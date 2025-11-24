@@ -24,17 +24,23 @@
     <Folder Include="InventoryEntries\Services\" />
     <Folder Include="InventoryEntryDetails\DTOs\" />
     <Folder Include="InventoryEntryDetails\Services\" />
+    <Folder Include="RefreshTokens\Services\" />
     <Folder Include="SaleDetails\DTOs\" />
     <Folder Include="SaleDetails\Services\" />
     <Folder Include="Sales\DTOs\" />
     <Folder Include="Sales\Services\" />
     <Folder Include="Suppliers\DTOs\" />
     <Folder Include="Suppliers\Services\" />
+    <Folder Include="Users\Services\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="12.0.0" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="jose-jwt" Version="5.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.10" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
   </ItemGroup>
 
 </Project>

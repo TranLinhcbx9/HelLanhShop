@@ -5,9 +5,11 @@ using HelLanhShop.Application.Employees.Interfaces;
 using HelLanhShop.Application.InventoryEntries.Interfaces;
 using HelLanhShop.Application.InventoryEntryDetails.Interfaces;
 using HelLanhShop.Application.Products.Interfaces;
+using HelLanhShop.Application.RefreshTokens.Interfaces;
 using HelLanhShop.Application.SaleDetails.Interfaces;
 using HelLanhShop.Application.Sales.Interfaces;
 using HelLanhShop.Application.Suppliers.Interfaces;
+using HelLanhShop.Application.Users.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,6 +30,8 @@ namespace HelLanhShop.Application.Common.Interfaces
         ISaleDetailRepository SaleDetails { get; }
         ISaleRepository Sales { get; }
         ISupplierRepository Suppliers { get; }
+        IUserRepository Users { get; }
+        IRefreshTokenRepository RefreshTokens { get; }
         IGenericRepository<T> GenericRepository<T>() where T : class;
         Task<int> SaveChangesAsync();
 

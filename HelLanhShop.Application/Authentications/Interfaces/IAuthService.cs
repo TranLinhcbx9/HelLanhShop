@@ -10,7 +10,8 @@ namespace HelLanhShop.Application.Authentications.Interfaces
 {
     public interface IAuthService
     {
-        Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto dto);
+        Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequestDto);
         Task<Result<LoginResponseDto>> RefreshTokenAsync(string refreshToken);
+        Task<Result<RegisterResponseDto>> RegisterAsync(RegisterRequestDto registerRequestDto);
     }
 }

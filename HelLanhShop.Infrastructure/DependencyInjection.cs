@@ -51,6 +51,7 @@ namespace HelLanhShop.Infrastructure
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IJwtTokenService, JwtTokenService>();
+            services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
 
 
             return services;

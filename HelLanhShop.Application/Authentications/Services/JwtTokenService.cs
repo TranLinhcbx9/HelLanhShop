@@ -34,10 +34,10 @@ namespace HelLanhShop.Application.Authentications.Services
             new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
             new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
             };
-            if (!user.Roles.Any())
-            {
-                throw new UnauthorizedAccessException("User has no roles assigned.");
-            }
+            //if (!user.Roles.Any())
+            //{
+            //    throw new UnauthorizedAccessException("User has no roles assigned.");
+            //}
             foreach (var role in user.Roles)
                 claims.Add(new Claim(ClaimTypes.Role, role)); 
 

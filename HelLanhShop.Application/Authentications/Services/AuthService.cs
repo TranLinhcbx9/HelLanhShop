@@ -20,19 +20,21 @@ namespace HelLanhShop.Application.Authentications.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtTokenService _jwtTokenService;
         private readonly JwtSettings _jwtSettings;
+        public readonly IPasswordHasher _passwordHasher;
 
-        public AuthService(IUnitOfWork unitOfWork, IJwtTokenService jwtTokenService, IOptions<JwtSettings> jwtOption)
+        public AuthService(IUnitOfWork unitOfWork, IJwtTokenService jwtTokenService, IOptions<JwtSettings> jwtOption, IPasswordHasher passwordHasher)
         {
             _unitOfWork = unitOfWork;
             _jwtTokenService = jwtTokenService;
             _jwtSettings = jwtOption.Value;
+            _passwordHasher = passwordHasher;
         }
         public async Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto requestDto)
         {
             var user = await _unitOfWork.Users.GetByUsernameAsync(requestDto.UserName);
             if (user == null) return Result<LoginResponseDto>.Failure("User not found");
 
-            var verified = VerifyPassword(requestDto.Password, user.PasswordHash);
+            var verified = _passwordHasher.Verify(requestDto.Password, user.PasswordHash);
             if (!verified) return Result<LoginResponseDto>.Failure("Invalid password");
 
             //Generate JWT
@@ -77,10 +79,42 @@ namespace HelLanhShop.Application.Authentications.Services
             };
             return Result<LoginResponseDto>.Success(responseDto);
         }
-        private bool VerifyPassword(string plain, string hash)
+        public async Task<Result<RegisterResponseDto>> RegisterAsync(RegisterRequestDto requestDto)
         {
-            return plain == hash; // demo 
-            //return BCrypt.Net.BCrypt.Verify(plain, hash);
+            var isExistingUser = await _unitOfWork.Users.AnyAsync(u => u.UserName == requestDto.UserName || u.Email == requestDto.Email);
+            if (isExistingUser) return Result<RegisterResponseDto>.Failure("Username or Email already exists");
+            var user = new User
+            {
+                UserName = requestDto.UserName,
+                Email = requestDto.Email,
+                PasswordHash = _passwordHasher.Hash(requestDto.Password)
+            };
+            await _unitOfWork.Users.AddAsync(user);
+            await _unitOfWork.SaveChangesAsync();
+            var customer = new Customer
+            {
+                UserId = user.Id,
+                Name = requestDto.Name!,
+                Phone = requestDto.Phone,
+                Address = requestDto.Address
+            };
+            await _unitOfWork.Customers.AddAsync(customer);
+            await _unitOfWork.SaveChangesAsync();
+
+            //Auto generate JWT token after register
+            var token = _jwtTokenService.GenerateAccessToken(user);
+            var responseDto = new RegisterResponseDto
+            {
+                UserId = user.Id,
+                UserName = user.UserName,
+                Email = user.Email,
+                Name = customer.Name,
+                Phone = customer.Phone,
+                Address = customer.Address,
+                JwtToken = token
+            };
+            return Result<RegisterResponseDto>.Success(responseDto);
         }
+        
     }
 }

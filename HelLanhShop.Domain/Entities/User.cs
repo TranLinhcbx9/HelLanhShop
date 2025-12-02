@@ -14,7 +14,6 @@ namespace HelLanhShop.Domain.Entities
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
         public IList<string> Roles { get; set; } = new List<string>();
-        public bool IsActive { get; set; } = true;
     }
 
 }

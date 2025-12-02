@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace HelLanhShop.Application.Common.Interfaces
         Task AddAsync(T entity);
         void Update(T entity);
         void Delete(T entity);
+        Task<bool> AnyAsync(Expression<Func<T, bool>> predicate);
         //Task SaveChangesAsync();
         IQueryable<T> Query();
         Task<PagedResult<T>> GetPagedAsync(IQueryable<T> query, int pageIndex, int pageSize, string? sortField = null, string? sortDir = "asc");

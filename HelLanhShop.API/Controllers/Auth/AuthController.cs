@@ -15,7 +15,7 @@ namespace HelLanhShop.API.Controllers.Auth
             _authService = authService;
         }
 
-        [HttpPost("login")] 
+        [HttpPost("login")]
         public async Task<ActionResult<LoginResponseDto>> Login(LoginRequestDto dto)
         {
             var result = await _authService.LoginAsync(dto);
@@ -31,6 +31,23 @@ namespace HelLanhShop.API.Controllers.Auth
             var result = await _authService.RefreshTokenAsync(refreshToken);
             if (!result.IsSuccess) return BadRequest(ApiResponse<LoginResponseDto>.Fail(result.Error!));
             return Ok(ApiResponse<LoginResponseDto>.Ok(result.Data!));
+        }
+        [HttpPost("register")]
+        public async Task<ActionResult<RegisterResponseDto>> Register(RegisterRequestDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                var errorMessage = string.Join("; ", ModelState.Values
+                                                         .SelectMany(v => v.Errors)
+                                                         .Select(e => e.ErrorMessage));
+                return BadRequest(ApiResponse<RegisterResponseDto>.Fail(errorMessage));
+            }    
+            var result = await _authService.RegisterAsync(dto);
+            if (!result.IsSuccess)
+            {
+                return BadRequest(ApiResponse<RegisterResponseDto>.Fail(result.Error!));
+            }
+            return Ok(ApiResponse<RegisterResponseDto>.Ok(result.Data!));
         }
     }
 }

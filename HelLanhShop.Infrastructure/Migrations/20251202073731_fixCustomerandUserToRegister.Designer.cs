@@ -4,6 +4,7 @@ using HelLanhShop.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HelLanhShop.Infrastructure.Migrations
 {
     [DbContext(typeof(HelLanhDBContext))]
-    partial class HelLanhDBContextModelSnapshot : ModelSnapshot
+    [Migration("20251202073731_fixCustomerandUserToRegister")]
+    partial class fixCustomerandUserToRegister
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

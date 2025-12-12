@@ -21,6 +21,6 @@ namespace HelLanhShop.Domain.Entities
         public Supplier? Supplier { get; set; }
 
         // Navigation
-        public ICollection<InventoryEntryDetail>? InventoryEntryDetails { get; set; }
+        public ICollection<InventoryEntryDetail> InventoryEntryDetails { get; set; } = null!;
     }
 }

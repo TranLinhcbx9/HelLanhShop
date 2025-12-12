@@ -26,21 +26,23 @@ namespace HelLanhShop.Application.Authentications.Services
             _jwtSetting = jwtOption.Value;
         }
 
-        public string GenerateAccessToken(User user)
+        public string GenerateAccessToken(User user, List<string> roles, List<string> permissions)
         {
             //payload
             var claims = new List<Claim>
             {
-            new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-            new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(), ClaimValueTypes.Integer64)
             };
-            //if (!user.Roles.Any())
-            //{
-            //    throw new UnauthorizedAccessException("User has no roles assigned.");
-            //}
-            foreach (var role in user.Roles)
-                claims.Add(new Claim(ClaimTypes.Role, role)); 
-
+            if (!roles.Any())
+            {
+                throw new UnauthorizedAccessException("User has no roles assigned.");
+            }
+            claims.AddRange(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+            claims.AddRange(permissions.Select(p => new Claim("permission", p)));
 
             // Tạo signature
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSetting.Key));

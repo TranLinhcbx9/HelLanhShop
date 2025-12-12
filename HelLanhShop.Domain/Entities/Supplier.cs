@@ -15,6 +15,6 @@ namespace HelLanhShop.Domain.Entities
         public string? Address { get; set; }
 
         // Navigation
-        public ICollection<InventoryEntry>? InventoryEntries { get; set; }
+        public ICollection<InventoryEntry> InventoryEntries { get; set; } = null!;
     }
 }

@@ -17,7 +17,7 @@ namespace HelLanhShop.Domain.Entities
         public decimal SubTotal => Quantity * UnitPrice;
 
         // Navigation
-        public Sale? Sale { get; set; }
-        public Product? Product { get; set; }
+        public Sale Sale { get; set; } = null!;
+        public Product Product { get; set; } = null!;
     }
 }

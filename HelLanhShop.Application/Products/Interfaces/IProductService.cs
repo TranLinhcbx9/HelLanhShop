@@ -12,12 +12,12 @@ namespace HelLanhShop.Application.Products.Interfaces
 {
     public interface IProductService
     {
-        Task<Result<List<ProductDto>>> GetAllAsync();
-        Task<Result<PagedResult<ProductDto>>> GetAllPagingAsync(int pageIndex, int pageSize);
-        Task<Result<ProductDto?>> GetByIdAsync(int id);
+        Task<Result<List<ProductAdminDto>>> GetAllAsync();
+        Task<Result<PagedResult<ProductAdminDto>>> GetAllPagingAsync(int pageIndex, int pageSize);
+        Task<Result<ProductAdminDto?>> GetByIdAsync(int id);
         Task<Result<CreateProductDto>> CreateAsync(CreateProductDto createProduct);
         Task<Result<UpdateProductDto>> UpdateAsync(UpdateProductDto updateProduct);
-        Task<Result<ProductDto>> DeleteAsync(int id);
-        Task<PagedResult<ProductDto>> SearchAsync(ProductFilter filter);
+        Task<Result<ProductAdminDto>> DeleteAsync(int id);
+        Task<PagedResult<ProductAdminDto>> SearchAsync(ProductFilter filter);
     }
 }

@@ -14,8 +14,8 @@ namespace HelLanhShop.Application.Common.Mappings
     {
         public MappingProfile()
         {
-            CreateMap<Product, ProductDto>();
-            CreateMap<ProductDto, Product>();
+            CreateMap<Product, ProductAdminDto>();
+            CreateMap<ProductAdminDto, Product>();
             CreateMap<Product, CreateProductDto>();
             CreateMap<CreateProductDto, Product>();
             CreateMap<Product, UpdateProductDto>();

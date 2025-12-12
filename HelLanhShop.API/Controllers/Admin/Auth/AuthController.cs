@@ -3,7 +3,7 @@ using HelLanhShop.Application.Authentications.DTOs;
 using HelLanhShop.Application.Authentications.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HelLanhShop.API.Controllers.Auth
+namespace HelLanhShop.API.Controllers.Admin.Auth
 {
     [Route("api/v1/[controller]")]
     [ApiController]

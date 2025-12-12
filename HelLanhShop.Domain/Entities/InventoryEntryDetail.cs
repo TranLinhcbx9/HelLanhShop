@@ -13,11 +13,11 @@ namespace HelLanhShop.Domain.Entities
 
         // FK tới phiếu nhập
         public int InventoryEntryId { get; set; }
-        public InventoryEntry? InventoryEntry { get; set; }
+        public InventoryEntry InventoryEntry { get; set; } = null!;
 
         // FK tới sản phẩm
         public int ProductId { get; set; }
-        public Product? Product { get; set; }
+        public Product Product { get; set; } = null!;
 
         public decimal Quantity { get; set; }    // Số lượng nhập
         public decimal Cost { get; set; }        // Giá nhập 1 đơn vị

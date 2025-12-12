@@ -13,13 +13,13 @@ namespace HelLanhShop.Domain.Entities
     {
         public int Id { get; set; }                 
         [ForeignKey("User")]
-        public int UserId { get; set; }             
-        public User? User { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string? Phone { get; set; }
-        public string? Address { get; set; }
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string Phone { get; set; } = null!;
+        public string Address { get; set; } = null!;
 
         // Navigation
-        public ICollection<Sale>? Sales { get; set; }
+        public ICollection<Sale> Sales { get; set; } = null!;
     }
 }

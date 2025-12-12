@@ -13,7 +13,9 @@ namespace HelLanhShop.Domain.Entities
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
-        public IList<string> Roles { get; set; } = new List<string>();
+        public ICollection<UserRole> UserRoles { get; set; } = null!;
+        public ICollection<UserPermission> UserPermissions { get; set; } = null!;
+        public ICollection<RefreshToken> RefreshTokens { get; set; } = null!;
     }
 
 }

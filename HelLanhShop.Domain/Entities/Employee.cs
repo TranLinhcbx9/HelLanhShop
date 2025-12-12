@@ -10,13 +10,13 @@ namespace HelLanhShop.Domain.Entities
     public class Employee : BaseEntity
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
-        public string? Role { get; set; } = "Staff"; // hoặc Admin
-        public string? Username { get; set; }
-        public string? PasswordHash { get; set; }
-
+        public int UserId { get; set; }
+        public User User { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string Phone { get; set; } = null!;
+        public string Position { get; set; } = null!;
         // Navigation
-        public ICollection<Sale>? Sales { get; set; }
-        public ICollection<InventoryEntry>? InventoryEntries { get; set; }
+        public ICollection<Sale> Sales { get; set; } = null!;
+        public ICollection<InventoryEntry> InventoryEntries { get; set; } = null!;
     }
 }

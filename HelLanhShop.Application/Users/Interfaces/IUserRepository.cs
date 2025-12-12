@@ -10,6 +10,7 @@ namespace HelLanhShop.Application.Users.Interfaces
 {
     public interface IUserRepository : IGenericRepository<User>
     {
-        Task<User?> GetByUsernameAsync(string username);
+        Task<User?> GetUserAuthGraphByUserNameOrEmailAsync(string userNameOrEmail);
+        Task<User?> GetByUserNameOrEmailAsync(string userNameOrEmail);
     }
 }

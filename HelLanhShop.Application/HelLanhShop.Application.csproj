@@ -24,13 +24,23 @@
     <Folder Include="InventoryEntries\Services\" />
     <Folder Include="InventoryEntryDetails\DTOs\" />
     <Folder Include="InventoryEntryDetails\Services\" />
+    <Folder Include="Permissions\DTOs\" />
+    <Folder Include="Permissions\Services\" />
     <Folder Include="RefreshTokens\Services\" />
+    <Folder Include="RolePermissions\DTOs\" />
+    <Folder Include="RolePermissions\Services\" />
+    <Folder Include="Roles\DTOs\" />
+    <Folder Include="Roles\Services\" />
     <Folder Include="SaleDetails\DTOs\" />
     <Folder Include="SaleDetails\Services\" />
     <Folder Include="Sales\DTOs\" />
     <Folder Include="Sales\Services\" />
     <Folder Include="Suppliers\DTOs\" />
     <Folder Include="Suppliers\Services\" />
+    <Folder Include="UserPermissions\DTOs\" />
+    <Folder Include="UserPermissions\Services\" />
+    <Folder Include="UserRoles\DTOs\" />
+    <Folder Include="UserRoles\Services\" />
     <Folder Include="Users\Services\" />
   </ItemGroup>
 

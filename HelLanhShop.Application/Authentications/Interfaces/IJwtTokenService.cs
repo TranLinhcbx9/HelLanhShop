@@ -10,7 +10,7 @@ namespace HelLanhShop.Application.Authentications.Interfaces
 {
     public interface IJwtTokenService
     {
-        string GenerateAccessToken(User user);
+        string GenerateAccessToken(User user, List<string> roles, List<string> permissions);
         //ClaimsPrincipal? ValidateAccessToken(string token);
 
     }

@@ -17,9 +17,9 @@ namespace HelLanhShop.Domain.Entities
         public string Unit { get; set; } = "gram";         // Đơn vị tính
         public string? Category { get; set; }
         // Navigation
-        public ICollection<ComboTemplateItem>? ComboTemplateItems { get; set; }
-        public ICollection<InventoryEntryDetail>? InventoryEntryDetails { get; set; }
-        public ICollection<SaleDetail>? SaleDetails { get; set; }
+        public ICollection<ComboTemplateItem> ComboTemplateItems { get; set; } = null!;
+        public ICollection<InventoryEntryDetail> InventoryEntryDetails { get; set; } = null!;
+        public ICollection<SaleDetail> SaleDetails { get; set; } = null!;
 
     }
 }

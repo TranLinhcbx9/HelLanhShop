@@ -46,7 +46,7 @@ namespace HelLanhShop.Application.Common.Models
                 TotalItems = totalItems
             };
 
-        public static PagedResult<T> Failure(string error)
+        public new static PagedResult<T> Failure(string error)
             => new PagedResult<T>(false, null, error);
     }
 

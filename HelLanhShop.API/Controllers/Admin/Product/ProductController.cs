@@ -5,7 +5,7 @@ using HelLanhShop.Application.Products.Filters;
 using HelLanhShop.Application.Products.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace HelLanhShop.API.Controllers.Product
+namespace HelLanhShop.API.Controllers.Admin.Product
 {
     [Route("api/v1/[controller]")]
     [ApiController]
@@ -17,7 +17,7 @@ namespace HelLanhShop.API.Controllers.Product
             _productService = productService;
         }
         [HttpGet("GetAll")]
-        public async Task<ActionResult<List<ProductDto>>> GetAll()
+        public async Task<ActionResult<List<ProductAdminDto>>> GetAll()
         {
             var result = await _productService.GetAllAsync();
 
@@ -25,27 +25,27 @@ namespace HelLanhShop.API.Controllers.Product
             {
                 return StatusCode(500, ApiResponse.Fail(result.Error!));
             }
-            return Ok(ApiResponse<List<ProductDto>>.Ok(result.Data!));
+            return Ok(ApiResponse<List<ProductAdminDto>>.Ok(result.Data!));
         }
         [HttpGet("GetAllPaging")]
-        public async Task<ActionResult<PagedResult<ProductDto>>> GetAllPagingAsync(int pageIndex = 1, int pageSize = 10)
+        public async Task<ActionResult<PagedResult<ProductAdminDto>>> GetAllPagingAsync(int pageIndex = 1, int pageSize = 10)
         {
             var result = await _productService.GetAllPagingAsync(pageIndex, pageSize);
             if (!result.IsSuccess)
             {
                 return StatusCode(500, ApiResponse.Fail(result.Error!));
             }
-            return Ok(ApiResponse<PagedResult<ProductDto>>.Ok(result.Data!));
+            return Ok(ApiResponse<PagedResult<ProductAdminDto>>.Ok(result.Data!));
         }
         [HttpGet("GetById/{id}")]
-        public async Task<ActionResult<ProductDto>> GetById(int id)
+        public async Task<ActionResult<ProductAdminDto>> GetById(int id)
         {
             var result = await _productService.GetByIdAsync(id);
             if (!result.IsSuccess)
             {
                 return NotFound(ApiResponse.Fail(result.Error!));
             }
-            return Ok(ApiResponse<ProductDto?>.Ok(result.Data!));
+            return Ok(ApiResponse<ProductAdminDto?>.Ok(result.Data!));
         }
         [HttpPost("Create")]
         public async Task<ActionResult<CreateProductDto>> Create([FromBody] CreateProductDto createProduct)
@@ -69,21 +69,21 @@ namespace HelLanhShop.API.Controllers.Product
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<ActionResult<ProductDto>> Delete(int id)
+        public async Task<ActionResult<ProductAdminDto>> Delete(int id)
         {
             var result = await _productService.DeleteAsync(id);
             if (!result.IsSuccess)
             {
                 return NotFound(ApiResponse.Fail(result.Error!));
             }
-            return Ok(ApiResponse<ProductDto>.Ok(result.Data!));
+            return Ok(ApiResponse<ProductAdminDto>.Ok(result.Data!));
         }
         [HttpPost("Search")]
-        public async Task<ActionResult<PagedResult<ProductDto>>> Search([FromBody] ProductFilter filter)
+        public async Task<ActionResult<PagedResult<ProductAdminDto>>> Search([FromBody] ProductFilter filter)
         {
             var result = await _productService.SearchAsync(filter);
             
-            return Ok(ApiResponse<PagedResult<ProductDto>>.Ok(result));
+            return Ok(ApiResponse<PagedResult<ProductAdminDto>>.Ok(result));
         }
     }
 }

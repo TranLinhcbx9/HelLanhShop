@@ -26,33 +26,33 @@ namespace HelLanhShop.Application.Products.Services
             _mapper = mapper;
             _genericService = baseService;
         }
-        public async Task<Result<List<ProductDto>>> GetAllAsync()
+        public async Task<Result<List<ProductAdminDto>>> GetAllAsync()
         {
             try
             {
                 var products = await _unitOfWork.Products.GetAllAsync(); // trả List<Product>
-                var dtos = _mapper.Map<List<ProductDto>>(products ?? new List<Product>());
-                return Result<List<ProductDto>>.Success(dtos);
+                var dtos = _mapper.Map<List<ProductAdminDto>>(products ?? new List<Product>());
+                return Result<List<ProductAdminDto>>.Success(dtos);
             }
             catch (Exception ex)
             {
-                return Result<List<ProductDto>>.Failure(ex.Message);
+                return Result<List<ProductAdminDto>>.Failure(ex.Message);
             }
         }
         
-        public async Task<Result<PagedResult<ProductDto>>> GetAllPagingAsync(int pageIndex, int pageSize)
+        public async Task<Result<PagedResult<ProductAdminDto>>> GetAllPagingAsync(int pageIndex, int pageSize)
         {
             try
             {
                 var query = _unitOfWork.Products.Query();
                 var pagedProducts = await _unitOfWork.Products.GetPagedAsync(query, pageIndex, pageSize); 
-                var dtos = _mapper.Map<List<ProductDto>>(pagedProducts.Data);
-                var pagedDto = PagedResult<ProductDto>.Success(dtos, pagedProducts.PageIndex, pagedProducts.PageSize, pagedProducts.TotalItems);
-                return Result<PagedResult<ProductDto>>.Success(pagedDto);
+                var dtos = _mapper.Map<List<ProductAdminDto>>(pagedProducts.Data);
+                var pagedDto = PagedResult<ProductAdminDto>.Success(dtos, pagedProducts.PageIndex, pagedProducts.PageSize, pagedProducts.TotalItems);
+                return Result<PagedResult<ProductAdminDto>>.Success(pagedDto);
             }
             catch (Exception ex)
             {
-                return Result<PagedResult<ProductDto>>.Failure(ex.Message);
+                return Result<PagedResult<ProductAdminDto>>.Failure(ex.Message);
             }
         }
 
@@ -72,29 +72,29 @@ namespace HelLanhShop.Application.Products.Services
             }
         }
 
-        public async Task<Result<ProductDto>> DeleteAsync(int id)
+        public async Task<Result<ProductAdminDto>> DeleteAsync(int id)
         {
             var product = await _unitOfWork.Products.GetByIdAsync(id);
             if (product == null)
             {
-                return Result<ProductDto>.Failure("Product Not Found");
+                return Result<ProductAdminDto>.Failure("Product Not Found");
             }
             _unitOfWork.Products.Delete(product);
             await _unitOfWork.SaveChangesAsync();
-            var dto = _mapper.Map<ProductDto>(product);
-            return Result<ProductDto>.Success(dto);
+            var dto = _mapper.Map<ProductAdminDto>(product);
+            return Result<ProductAdminDto>.Success(dto);
         }
 
 
-        public async Task<Result<ProductDto?>> GetByIdAsync(int id)
+        public async Task<Result<ProductAdminDto?>> GetByIdAsync(int id)
         {
             var product = await _unitOfWork.Products.GetByIdAsync(id);
             if (product == null)
             { 
-                return Result<ProductDto?>.Failure("Product Not Found");
+                return Result<ProductAdminDto?>.Failure("Product Not Found");
             }
-            var dto = _mapper.Map<ProductDto?>(product);
-            return Result<ProductDto?>.Success(dto);
+            var dto = _mapper.Map<ProductAdminDto?>(product);
+            return Result<ProductAdminDto?>.Success(dto);
         }
 
         public async Task<Result<UpdateProductDto>> UpdateAsync(UpdateProductDto updateProduct)
@@ -111,9 +111,9 @@ namespace HelLanhShop.Application.Products.Services
             return Result<UpdateProductDto>.Success(dto);
         }
 
-        public Task<PagedResult<ProductDto>> SearchAsync(ProductFilter filter)
+        public Task<PagedResult<ProductAdminDto>> SearchAsync(ProductFilter filter)
         {
-            return _genericService.SearchAsync<ProductDto>(filter);
+            return _genericService.SearchAsync<ProductAdminDto>(filter);
         }
     }   
 }

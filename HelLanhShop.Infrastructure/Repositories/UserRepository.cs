@@ -15,9 +15,23 @@ namespace HelLanhShop.Infrastructure.Repositories
         public UserRepository(HelLanhDBContext context) : base(context)
         {
         }
-        public Task<User?> GetByUsernameAsync(string username)
+        public async Task<User?> GetByUserNameOrEmailAsync(string userNameOrEmail)
         {
-            return _dbSet.FirstOrDefaultAsync(u => u.UserName == username);
+            return await _dbSet
+                        .FirstOrDefaultAsync(u => u.UserName == userNameOrEmail || u.Email == userNameOrEmail);
         }
+
+        public async Task<User?> GetUserAuthGraphByUserNameOrEmailAsync(string userNameOrEmail)
+        {
+            return await _dbSet
+                        .Include(u => u.UserRoles)
+                            .ThenInclude(ur => ur.Role)
+                                .ThenInclude(r => r.RolePermissions)
+                                    .ThenInclude(rp => rp.Permission)
+                        .Include(u => u.UserPermissions)
+                            .ThenInclude(up => up.Permission)
+                        .FirstOrDefaultAsync(u => u.UserName == userNameOrEmail || u.Email == userNameOrEmail);
+        }
+
     }
 }

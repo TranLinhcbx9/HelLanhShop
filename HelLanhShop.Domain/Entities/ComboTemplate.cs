@@ -16,6 +16,6 @@ namespace HelLanhShop.Domain.Entities
         public decimal? TotalWeight { get; set; }          // Tổng khối lượng (nếu có)
 
         // Navigation
-        public ICollection<ComboTemplateItem>? ComboTemplateItems { get; set; }
+        public ICollection<ComboTemplateItem> ComboTemplateItems { get; set; } = null!;
     }
 }

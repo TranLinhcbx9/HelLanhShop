@@ -13,5 +13,7 @@ namespace HelLanhShop.Application.Authentications.Interfaces
         Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequestDto);
         Task<Result<LoginResponseDto>> RefreshTokenAsync(string refreshToken);
         Task<Result<RegisterResponseDto>> RegisterAsync(RegisterRequestDto registerRequestDto);
+        Task<UserAuthDataDto?> GetUserAuthDataAsync(string usernameOrEmail);
+
     }
 }

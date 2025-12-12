@@ -16,8 +16,8 @@ namespace HelLanhShop.Domain.Entities
         public decimal TotalAmount { get; set; }
 
         // Navigation
-        public Customer? Customer { get; set; }
-        public Employee? Employee { get; set; }
-        public ICollection<SaleDetail>? SaleDetails { get; set; }
+        public Customer Customer { get; set; } = null!;
+        public Employee Employee { get; set; } = null!;
+        public ICollection<SaleDetail> SaleDetails { get; set; } = null!;
     }
 }

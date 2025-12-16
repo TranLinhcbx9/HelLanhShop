@@ -4,23 +4,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HelLanhShop;
+using HelLanhShop.Application.Common.Enums;
 namespace HelLanhShop.Application.Common.Models
 {
-    public class Result<T>
+    public class Result
     {
-            public bool IsSuccess { get; }
-            public string? Error { get; }
-            public T? Data { get; }
+        public bool IsSuccess { get; }
+        public string? Error { get; }
+        public ErrorType ErrorType { get; }
 
-            protected Result(bool isSuccess, T? data, string? error)
+        protected Result(bool isSuccess, string? error, ErrorType errorType)
+        {
+            IsSuccess = isSuccess;
+            Error = error;
+            ErrorType = errorType;
+        }
+
+        public static Result Success()
+            => new(true, null, ErrorType.None);
+
+        public static Result Failure(string error, ErrorType errorType)
+            => new(false, error, errorType);
+    }
+    public class Result<T> : Result
+    {
+            public T? Data { get; }
+            protected Result(bool isSuccess, T? data, string? error, ErrorType errorType) : base(isSuccess, error, errorType)
             {
-                IsSuccess = isSuccess;
                 Data = data;
-                Error = error;
             }
 
-            public static Result<T> Success(T data) => new(true, data, null);
-            public static Result<T> Failure(string error) => new(false, default, error);
+            public static Result<T> Success(T data) => new(true, data, null, ErrorType.None);
+            public new static Result<T> Failure(string error, ErrorType errorType) => new(false, default, error, errorType);
     }
     public class PagedResult<T> : Result<IEnumerable<T>>
     {
@@ -32,22 +47,27 @@ namespace HelLanhShop.Application.Common.Models
         public bool HasPrevious => PageIndex > 1;
 
         // Add a constructor that calls the base constructor
-        public PagedResult(bool isSuccess, IEnumerable<T>? data, string? error)
-            : base(isSuccess, data, error)
+        private PagedResult(
+        bool isSuccess,
+        IEnumerable<T>? data,
+        string? error,
+        ErrorType errorType,
+        int pageIndex,
+        int pageSize,
+        int totalItems
+    ) : base(isSuccess, data, error, errorType)
         {
+            PageIndex = pageIndex;
+            PageSize = pageSize;
+            TotalItems = totalItems;
         }
 
-        // Optionally, you can add factory methods for success/failure if needed
+        // factory methods for success/failure
         public static PagedResult<T> Success(IEnumerable<T> data, int pageIndex, int pageSize, int totalItems)
-            => new PagedResult<T>(true, data, null)
-            {
-                PageIndex = pageIndex,
-                PageSize = pageSize,
-                TotalItems = totalItems
-            };
+            => new PagedResult<T>(true, data, null, ErrorType.None, pageIndex, pageSize, totalItems);
 
-        public new static PagedResult<T> Failure(string error)
-            => new PagedResult<T>(false, null, error);
+        public new static PagedResult<T> Failure(string error, ErrorType errorType)
+            => new PagedResult<T>(false, null, error, errorType, 0, 0, 0);
     }
 
 }

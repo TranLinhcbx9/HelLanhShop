@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HelLanhShop.Application.Common.Enums;
 using HelLanhShop.Application.Common.Helpers;
 using HelLanhShop.Application.Common.Interfaces;
 using HelLanhShop.Application.Common.Models;
@@ -20,7 +21,7 @@ namespace HelLanhShop.Application.Common.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
-        public async Task<PagedResult<TDto>> SearchAsync<TDto>(BaseFilter filter)
+        public async Task<Result<PagedResult<TDto>>> SearchAsync<TDto>(BaseFilter filter)
         {
             var query = _repo.Query();
 
@@ -32,13 +33,20 @@ namespace HelLanhShop.Application.Common.Services
 
             var dtos = _mapper.Map<List<TDto>>(paged.Data);
 
-            return PagedResult<TDto>.Success(
+            var pagedDto = PagedResult<TDto>.Success(
                 dtos,
                 paged.PageIndex,
                 paged.PageSize,
-                paged.TotalPages
+                paged.TotalItems
             );
+            return Result<PagedResult<TDto>>.Success(pagedDto);
         }
+        //public async Task<Result<List<TDto>>> GetAll<TDto>()
+        //{
+        //    var entities = await _repo.GetAllAsync();
+        //    var dtos = _mapper.Map<List<TDto>>(entities);
+        //    return Result<List<TDto>>.Success(dtos); 
+        //}
         public async Task<int> SaveChangesAsync()
         {
             return await _unitOfWork.SaveChangesAsync();

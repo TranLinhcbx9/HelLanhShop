@@ -2,6 +2,7 @@
 using HelLanhShop.Application.Authentications.DTOs;
 using HelLanhShop.Application.Authentications.Interfaces;
 using HelLanhShop.Application.Authentications.Models;
+using HelLanhShop.Application.Common.Enums;
 using HelLanhShop.Application.Common.Interfaces;
 using HelLanhShop.Application.Common.Models;
 using HelLanhShop.Domain.Entities;
@@ -33,16 +34,16 @@ namespace HelLanhShop.Application.Authentications.Services
         public async Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto requestDto)   
         {
             var user = await _unitOfWork.Users.GetByUserNameOrEmailAsync(requestDto.UserNameOrEmail);
-            if (user == null) return Result<LoginResponseDto>.Failure("User not found");
+            if (user == null) return Result<LoginResponseDto>.Failure("User not found", ErrorType.NotFound);
 
             var verified = _passwordHasher.Verify(requestDto.Password, user.PasswordHash);
-            if (!verified) return Result<LoginResponseDto>.Failure("Invalid password");
+            if (!verified) return Result<LoginResponseDto>.Failure("Invalid password", ErrorType.Validation);
 
             var userAuth = await GetUserAuthDataAsync(requestDto.UserNameOrEmail);
-            if (userAuth == null) return Result<LoginResponseDto>.Failure("Cannot load authorization data");
+            if (userAuth == null) return Result<LoginResponseDto>.Failure("Cannot load authorization data", ErrorType.NotFound);
 
             if (!userAuth.Roles.Any())
-                return Result<LoginResponseDto>.Failure("User has no roles assigned.");
+                return Result<LoginResponseDto>.Failure("User has no roles assigned.", ErrorType.Forbidden);
             //Generate JWT
             var token = _jwtTokenService.GenerateAccessToken(user, userAuth.Roles, userAuth.Permissions);
             var tokenObj = new JwtSecurityTokenHandler().ReadJwtToken(token);
@@ -67,16 +68,16 @@ namespace HelLanhShop.Application.Authentications.Services
         public async Task<Result<LoginResponseDto>> RefreshTokenAsync(string refreshToken)
         {
             var rToken = await _unitOfWork.RefreshTokens.GetByTokenAsync(refreshToken);
-            if (rToken == null || rToken.ExpiryDate < DateTime.UtcNow) return Result<LoginResponseDto>.Failure("Invalid or expired refresh newAccessTokem");
+            if (rToken == null || rToken.ExpiryDate < DateTime.UtcNow) return Result<LoginResponseDto>.Failure("Invalid or expired refresh newAccessToken", ErrorType.Unauthorized);
 
             var user = await _unitOfWork.Users.GetByIdAsync(rToken.UserId);
-            if (user == null) return Result<LoginResponseDto>.Failure("User not found");
+            if (user == null) return Result<LoginResponseDto>.Failure("User not found", ErrorType.NotFound);
 
             var userAuth = await GetUserAuthDataAsync(user.UserName);
-            if (userAuth == null) return Result<LoginResponseDto>.Failure("Cannot load authorization data");
+            if (userAuth == null) return Result<LoginResponseDto>.Failure("Cannot load authorization data", ErrorType.NotFound);
 
             if (!userAuth.Roles.Any())
-                return Result<LoginResponseDto>.Failure("User has no roles assigned.");
+                return Result<LoginResponseDto>.Failure("User has no roles assigned.", ErrorType.Forbidden);
 
             var newAccessTokem = _jwtTokenService.GenerateAccessToken(user,userAuth.Roles, userAuth.Permissions);
 
@@ -102,7 +103,7 @@ namespace HelLanhShop.Application.Authentications.Services
                 if (isExistingUser)
                 {
                     await _unitOfWork.RollbackTransactionAsync();
-                    return Result<RegisterResponseDto>.Failure("Username or Email already exists");
+                    return Result<RegisterResponseDto>.Failure("Username or Email already exists", ErrorType.Validation);
                 }
 
                 
@@ -127,7 +128,7 @@ namespace HelLanhShop.Application.Authentications.Services
                 if (customerRole == null)
                 {
                     await _unitOfWork.RollbackTransactionAsync();
-                    return Result<RegisterResponseDto>.Failure("Customer role not found");
+                    return Result<RegisterResponseDto>.Failure("Customer role not found", ErrorType.NotFound);
                 }
                 var userRole = new UserRole
                 {
@@ -151,7 +152,7 @@ namespace HelLanhShop.Application.Authentications.Services
 
                 var userAuth = await GetUserAuthDataAsync(requestDto.UserName);
                 if (userAuth == null || !userAuth.Roles.Any())
-                    return Result<RegisterResponseDto>.Failure("User has no roles assigned.");
+                    return Result<RegisterResponseDto>.Failure("User has no roles assigned.", ErrorType.Forbidden);
 
                 //Auto generate JWT newAccessToken after register
                 var token = _jwtTokenService.GenerateAccessToken(user, userAuth.Roles, userAuth.Permissions);

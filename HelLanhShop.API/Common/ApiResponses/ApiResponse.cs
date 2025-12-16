@@ -1,4 +1,4 @@
-﻿namespace HelLanhShop.API.Common.ApiResponse
+﻿namespace HelLanhShop.API.Common.ApiResponses
 {
     public class ApiResponse<T>
     {

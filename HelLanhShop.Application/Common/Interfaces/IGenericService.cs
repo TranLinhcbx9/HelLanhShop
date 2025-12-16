@@ -9,6 +9,6 @@ namespace HelLanhShop.Application.Common.Interfaces
 {
     public interface IGenericService<T> where T : class
     {
-        Task<PagedResult<TDto>> SearchAsync<TDto>(BaseFilter filter);
+        Task<Result<PagedResult<TDto>>> SearchAsync<TDto>(BaseFilter filter);
     }
 }

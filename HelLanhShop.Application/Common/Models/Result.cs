@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HelLanhShop;
-using HelLanhShop.Application.Common.Enums;
+﻿   using HelLanhShop.Application.Common.Enums;
 namespace HelLanhShop.Application.Common.Models
 {
     public class Result
@@ -12,36 +6,38 @@ namespace HelLanhShop.Application.Common.Models
         public bool IsSuccess { get; }
         public string? Error { get; }
         public ErrorType ErrorType { get; }
+        public ErrorCode ErrorCode { get; }
 
-        protected Result(bool isSuccess, string? error, ErrorType errorType)
+        protected Result(bool isSuccess, string? error, ErrorType errorType, ErrorCode errorCode)
         {
             IsSuccess = isSuccess;
             Error = error;
             ErrorType = errorType;
+            ErrorCode = errorCode;
         }
 
         public static Result Success()
-            => new(true, null, ErrorType.None);
+            => new(true, null, ErrorType.None, ErrorCode.NONE);
 
-        public static Result Failure(string error, ErrorType errorType)
-            => new(false, error, errorType);
+        public static Result Failure(string error, ErrorType errorType, ErrorCode errorCode)
+            => new(false, error, errorType, errorCode);
     }
     public class Result<T> : Result
     {
             public T? Data { get; }
-            protected Result(bool isSuccess, T? data, string? error, ErrorType errorType) : base(isSuccess, error, errorType)
+            protected Result(bool isSuccess, T? data, string? error, ErrorType errorType, ErrorCode errorCode) : base(isSuccess, error, errorType, errorCode)
             {
                 Data = data;
             }
 
-            public static Result<T> Success(T data) => new(true, data, null, ErrorType.None);
-            public new static Result<T> Failure(string error, ErrorType errorType) => new(false, default, error, errorType);
+            public static Result<T> Success(T data) => new(true, data, null, ErrorType.None, ErrorCode.NONE);
+            public static Result<T> Failure(string error, ErrorType errorType, ErrorCode errorCode) => new(false, default, error, errorType, errorCode);
     }
     public class PagedResult<T> : Result<IEnumerable<T>>
     {
-        public int PageIndex { get; set; }
-        public int PageSize { get; set; }
-        public int TotalItems { get; set; }
+        public int PageIndex { get; }
+        public int PageSize { get; }
+        public int TotalItems { get; }
         public int TotalPages => PageSize == 0 ? 0 : (int)Math.Ceiling(TotalItems / (double)PageSize);
         public bool HasNext => PageIndex < TotalPages;
         public bool HasPrevious => PageIndex > 1;
@@ -52,10 +48,11 @@ namespace HelLanhShop.Application.Common.Models
         IEnumerable<T>? data,
         string? error,
         ErrorType errorType,
+        ErrorCode errorCode,
         int pageIndex,
         int pageSize,
         int totalItems
-    ) : base(isSuccess, data, error, errorType)
+    ) : base(isSuccess, data, error, errorType, errorCode)
         {
             PageIndex = pageIndex;
             PageSize = pageSize;
@@ -64,10 +61,10 @@ namespace HelLanhShop.Application.Common.Models
 
         // factory methods for success/failure
         public static PagedResult<T> Success(IEnumerable<T> data, int pageIndex, int pageSize, int totalItems)
-            => new PagedResult<T>(true, data, null, ErrorType.None, pageIndex, pageSize, totalItems);
+            => new PagedResult<T>(true, data, null, ErrorType.None, ErrorCode.NONE, pageIndex, pageSize, totalItems);
 
-        public new static PagedResult<T> Failure(string error, ErrorType errorType)
-            => new PagedResult<T>(false, null, error, errorType, 0, 0, 0);
+        public static PagedResult<T> Failure(string error, ErrorType errorType, ErrorCode errorCode)
+            => new PagedResult<T>(false, null, error, errorType, errorCode, 0, 0, 0);
     }
 
 }

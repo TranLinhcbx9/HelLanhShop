@@ -14,6 +14,5 @@ namespace HelLanhShop.Application.Common.Enums
         Unauthorized,
         Forbidden,
         Conflict,
-        Unknown
     }
 }

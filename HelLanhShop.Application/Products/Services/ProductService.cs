@@ -29,48 +29,27 @@ namespace HelLanhShop.Application.Products.Services
         }
         public async Task<Result<List<ProductAdminDto>>> GetAllAsync()
         {
-            try
-            {
-                var products = await _unitOfWork.Products.GetAllAsync(); // trả List<Product>
-                var dtos = _mapper.Map<List<ProductAdminDto>>(products ?? new List<Product>());
-                return Result<List<ProductAdminDto>>.Success(dtos);
-            }
-            catch (Exception ex)
-            {
-                return Result<List<ProductAdminDto>>.Failure(ex.Message, ErrorType.Unknown);
-            }
+            var products = await _unitOfWork.Products.GetAllAsync() ?? new List<Product>(); // trả List<Product>
+            var dtos = _mapper.Map<List<ProductAdminDto>>(products);
+            return Result<List<ProductAdminDto>>.Success(dtos);
         }
         
         public async Task<Result<PagedResult<ProductAdminDto>>> GetAllPagingAsync(RequestPagingProduct request)
         {
-            try
-            {
-                var query = _unitOfWork.Products.Query();
-                var pagedProducts = await _unitOfWork.Products.GetPagedAsync(query, request.PageIndex, request.PageSize); 
-                var dtos = _mapper.Map<List<ProductAdminDto>>(pagedProducts.Data);
-                var pagedDto = PagedResult<ProductAdminDto>.Success(dtos, pagedProducts.PageIndex, pagedProducts.PageSize, pagedProducts.TotalItems);
-                return Result<PagedResult<ProductAdminDto>>.Success(pagedDto);
-            }
-            catch (Exception ex)
-            {
-                return Result<PagedResult<ProductAdminDto>>.Failure(ex.Message, ErrorType.Unknown);
-            }
+            var query = _unitOfWork.Products.Query();
+            var pagedProducts = await _unitOfWork.Products.GetPagedAsync(query, request.PageIndex, request.PageSize);
+            var dtos = _mapper.Map<List<ProductAdminDto>>(pagedProducts.Data);
+            var pagedDto = PagedResult<ProductAdminDto>.Success(dtos, pagedProducts.PageIndex, pagedProducts.PageSize, pagedProducts.TotalItems);
+            return Result<PagedResult<ProductAdminDto>>.Success(pagedDto);
         }
 
         public async Task<Result<CreateProductDto>> CreateAsync(CreateProductDto createProduct)
         {
-            try
-            {
-                var product = _mapper.Map<Product>(createProduct);
-                await _unitOfWork.Products.AddAsync(product);
-                await _unitOfWork.SaveChangesAsync();
-                var dto = _mapper.Map<CreateProductDto>(product);
-                return  Result<CreateProductDto>.Success(dto);
-            }
-            catch (Exception ex)
-            {
-                return Result<CreateProductDto>.Failure(ex.Message, ErrorType.Unknown);
-            }
+            var product = _mapper.Map<Product>(createProduct);
+            await _unitOfWork.Products.AddAsync(product);
+            await _unitOfWork.SaveChangesAsync();
+            var dto = _mapper.Map<CreateProductDto>(product);
+            return Result<CreateProductDto>.Success(dto);
         }
 
         public async Task<Result<ProductAdminDto>> DeleteAsync(int id)
@@ -78,7 +57,7 @@ namespace HelLanhShop.Application.Products.Services
             var product = await _unitOfWork.Products.GetByIdAsync(id);
             if (product == null)
             {
-                return Result<ProductAdminDto>.Failure("Product Not Found", ErrorType.NotFound);
+                return Result<ProductAdminDto>.Failure("Product Not Found", ErrorType.NotFound, ErrorCode.PRODUCT_NOT_FOUND);
             }
             _unitOfWork.Products.Delete(product);
             await _unitOfWork.SaveChangesAsync();
@@ -92,7 +71,7 @@ namespace HelLanhShop.Application.Products.Services
             var product = await _unitOfWork.Products.GetByIdAsync(id);
             if (product == null)
             { 
-                return Result<ProductAdminDto?>.Failure("Product Not Found", ErrorType.NotFound);
+                return Result<ProductAdminDto?>.Failure("Product Not Found", ErrorType.NotFound, ErrorCode.PRODUCT_NOT_FOUND);
             }
             var dto = _mapper.Map<ProductAdminDto?>(product);
             return Result<ProductAdminDto?>.Success(dto);
@@ -103,7 +82,7 @@ namespace HelLanhShop.Application.Products.Services
             var product = await _unitOfWork.Products.GetByIdAsync(updateProduct.Id);
             if (product == null)
             {
-                return Result<UpdateProductDto>.Failure("Product Not Found", ErrorType.NotFound);
+                return Result<UpdateProductDto>.Failure("Product Not Found", ErrorType.NotFound, ErrorCode.PRODUCT_NOT_FOUND);
             }
             _mapper.Map(updateProduct, product);
             _unitOfWork.Products.Update(product);

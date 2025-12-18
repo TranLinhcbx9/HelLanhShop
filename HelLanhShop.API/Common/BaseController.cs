@@ -16,12 +16,10 @@ namespace HelLanhShop.API.Common
         {
             if (result.IsSuccess)
             {
-                if (result.Data == null && typeof(T) != typeof(PagedResult<>))
-            return NoContent();
                 return Ok(ApiResponse<T>.Ok(result.Data));
             }
 
-            return StatusCode(result.ErrorType.ToHttpStatusCode(), ApiResponse<T>.Fail(result.Error ?? "Error"));
+            return StatusCode(result.ErrorType.ToHttpStatusCode(), ApiResponse<T>.Fail(result.Error ?? "Error", default, result.ErrorType, result.ErrorCode));
         }
         protected ActionResult<ApiResponse> FromResult(Result result)
         {
@@ -29,14 +27,14 @@ namespace HelLanhShop.API.Common
             {
                 return Ok(ApiResponse.Ok());
             }
-            return StatusCode(result.ErrorType.ToHttpStatusCode(), ApiResponse.Fail(result.Error ?? "Error"));
+            return StatusCode(result.ErrorType.ToHttpStatusCode(), ApiResponse.Fail(result.Error ?? "Error", result.ErrorType, result.ErrorCode));
         }
         protected ActionResult<PagedResponse<T>> FromPaged<T>(Result<PagedResult<T>> result)
         {
             if (!result.IsSuccess)
                 return StatusCode(
                     result.ErrorType.ToHttpStatusCode(),
-                    PagedResponse<T>.Fail(result.Error ?? "Error")
+                    PagedResponse<T>.Fail(result.Error ?? "Error", default, result.ErrorType, result.ErrorCode)
                 );
 
             var p = result.Data!;
@@ -45,7 +43,10 @@ namespace HelLanhShop.API.Common
                 p.Data ?? Enumerable.Empty<T>(),
                 p.PageIndex,
                 p.PageSize,
-                p.TotalItems
+                p.TotalItems,
+                "Success",
+                ErrorType.None,
+                ErrorCode.NONE
             );
 
             return Ok(response);

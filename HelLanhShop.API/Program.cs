@@ -1,4 +1,5 @@
-﻿using HelLanhShop.Application.Authentications.Models;
+﻿using HelLanhShop.API.Middlewares;
+using HelLanhShop.Application.Authentications.Models;
 using HelLanhShop.Application.Common.Mappings;
 using HelLanhShop.Infrastructure;
 using HelLanhShop.Infrastructure.Data;
@@ -9,6 +10,8 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Text;
 var builder = WebApplication.CreateBuilder(args);
+
+// add middleware custom exception
 
 builder.Services.AddDbContext<HelLanhDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
@@ -57,6 +60,8 @@ builder.Services.AddAuthentication("Bearer")
 
 
 var app = builder.Build();
+
+app.UseExceptionMiddleware();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

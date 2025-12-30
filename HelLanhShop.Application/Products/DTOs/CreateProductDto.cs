@@ -8,7 +8,7 @@ namespace HelLanhShop.Application.Products.DTOs
 {
     public class CreateProductDto
     {
-        public string Name { get; set; } = string.Empty;   // Tên trái cây
+        public string Name { get; set; }   // Tên trái cây
         public decimal CostPrice { get; set; }             // Giá nhập trung bình
         public decimal UnitPrice { get; set; }             // Giá bán
         public decimal? Stock { get; set; }                // Tồn kho hiện tại

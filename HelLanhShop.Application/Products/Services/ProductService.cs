@@ -6,6 +6,7 @@ using HelLanhShop.Application.Common.Services;
 using HelLanhShop.Application.Products.DTOs;
 using HelLanhShop.Application.Products.Filters;
 using HelLanhShop.Application.Products.Interfaces;
+using HelLanhShop.Application.Products.Validators;
 using HelLanhShop.Domain.Entities;
 using System;
 using System.Collections.Generic;
@@ -20,12 +21,26 @@ namespace HelLanhShop.Application.Products.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly IGenericService<Product> _genericService;
+        private readonly RequestPagingProductValidator _pagingValidator;
+        private readonly CreateProductValidator _createValidator;
+        private readonly UpdateProductValidator _updateValidator;
+        private readonly ProductFilterValidator _filterValidator;
 
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IGenericService<Product> baseService)
+        public ProductService(IUnitOfWork unitOfWork, 
+            IMapper mapper, 
+            IGenericService<Product> baseService, 
+            RequestPagingProductValidator pagingValidator, 
+            CreateProductValidator createValidator,
+            UpdateProductValidator updateValidator,
+            ProductFilterValidator filterValidator)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _genericService = baseService;
+            _pagingValidator = pagingValidator;
+            _createValidator = createValidator;
+            _updateValidator = updateValidator;
+            _filterValidator = filterValidator;
         }
         public async Task<Result<List<ProductAdminDto>>> GetAllAsync()
         {
@@ -36,6 +51,14 @@ namespace HelLanhShop.Application.Products.Services
         
         public async Task<Result<PagedResult<ProductAdminDto>>> GetAllPagingAsync(RequestPagingProduct request)
         {
+            var validation = _pagingValidator.ValidateToResult(request);
+            if (!validation.IsSuccess)
+                return Result<PagedResult<ProductAdminDto>>.Failure(
+                    validation.Error!,
+                    validation.ErrorType,
+                    validation.ErrorCode
+                );
+
             var query = _unitOfWork.Products.Query();
             var pagedProducts = await _unitOfWork.Products.GetPagedAsync(query, request.PageIndex, request.PageSize);
             var dtos = _mapper.Map<List<ProductAdminDto>>(pagedProducts.Data);
@@ -45,6 +68,13 @@ namespace HelLanhShop.Application.Products.Services
 
         public async Task<Result<CreateProductDto>> CreateAsync(CreateProductDto createProduct)
         {
+            var validation = _createValidator.ValidateToResult(createProduct);
+            if (!validation.IsSuccess)
+                return Result<CreateProductDto>.Failure(
+                    validation.Error!,
+                    validation.ErrorType,
+                    validation.ErrorCode
+                );
             var product = _mapper.Map<Product>(createProduct);
             await _unitOfWork.Products.AddAsync(product);
             await _unitOfWork.SaveChangesAsync();
@@ -79,6 +109,14 @@ namespace HelLanhShop.Application.Products.Services
 
         public async Task<Result<UpdateProductDto>> UpdateAsync(UpdateProductDto updateProduct)
         {
+            var validation = _updateValidator.ValidateToResult(updateProduct);
+            if (!validation.IsSuccess)
+                return Result<UpdateProductDto>.Failure(
+                    validation.Error!,
+                    validation.ErrorType,
+                    validation.ErrorCode
+                );
+
             var product = await _unitOfWork.Products.GetByIdAsync(updateProduct.Id);
             if (product == null)
             {
@@ -91,9 +129,18 @@ namespace HelLanhShop.Application.Products.Services
             return Result<UpdateProductDto>.Success(dto);
         }
 
-        public Task<Result<PagedResult<ProductAdminDto>>> SearchAsync(ProductFilter filter)
+        public async Task<Result<PagedResult<ProductAdminDto>>> SearchAsync(ProductFilter filter)
         {
-            return _genericService.SearchAsync<ProductAdminDto>(filter);
+            var validation = _filterValidator.ValidateToResult(filter);
+            if (!validation.IsSuccess)
+            {
+                return Result<PagedResult<ProductAdminDto>>.Failure(
+                    validation.Error!,
+                    validation.ErrorType,
+                    validation.ErrorCode
+                );
+            }
+            return await _genericService.SearchAsync<ProductAdminDto>(filter);
         }
     }   
 }

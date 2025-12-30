@@ -11,7 +11,7 @@ namespace HelLanhShop.Application.Common.Enums
         NONE = 0,
         // SYSTEM
         INTERNAL_ERROR = 1000,
-
+        VALIDATION_ERROR = 1001,
         // VALIDATION
         INVALID_DATA = 2000,
 

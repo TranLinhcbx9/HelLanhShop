@@ -1,9 +1,12 @@
-﻿using HelLanhShop.Application.Authentications.Interfaces;
+﻿using FluentValidation;
+using HelLanhShop.Application.Authentications.Interfaces;
 using HelLanhShop.Application.Authentications.Services;
 using HelLanhShop.Application.ComboTemplateItems.Interfaces;
 using HelLanhShop.Application.ComboTemplates.Interfaces;
+using HelLanhShop.Application.Common;
 using HelLanhShop.Application.Common.Interfaces;
 using HelLanhShop.Application.Common.Services;
+using HelLanhShop.Application.Common.Validation.Base;
 using HelLanhShop.Application.Customers.Interfaces;
 using HelLanhShop.Application.Employees.Interfaces;
 using HelLanhShop.Application.InventoryEntries.Interfaces;
@@ -22,11 +25,6 @@ using HelLanhShop.Application.UserRoles.Interfaces;
 using HelLanhShop.Application.Users.Interfaces;
 using HelLanhShop.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HelLanhShop.Infrastructure
 {
@@ -63,6 +61,8 @@ namespace HelLanhShop.Infrastructure
             services.AddScoped<IJwtTokenService, JwtTokenService>();
             services.AddScoped<IPasswordHasher, BcryptPasswordHasher>();
 
+            //validations
+            services.AddValidatorsFromAssemblyContaining<AssemblyMarker>();
 
             return services;
         }

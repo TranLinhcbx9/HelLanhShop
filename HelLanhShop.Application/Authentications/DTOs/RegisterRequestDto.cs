@@ -9,13 +9,11 @@ namespace HelLanhShop.Application.Authentications.DTOs
 {
     public class RegisterRequestDto
     {
-        [Required(ErrorMessage = "UserName is required")]
-        public required string UserName { get; set; }
-        public string Email { get; set; } = null!;
-        [Required(ErrorMessage = "Password is required")]
-        public required string Password { get; set; }
-        public string Name { get; set; } = null!; //FullName
-        public string Phone { get; set; } = null!;
-        public string Address { get; set; } = null!;
+        public string UserName { get; set; }
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; }
+        public string Name { get; set; } = string.Empty; //FullName
+        public string Phone { get; set; } = string.Empty;
+        public string Address { get; set; } = string.Empty;
     }
 }

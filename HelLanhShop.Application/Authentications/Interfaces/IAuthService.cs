@@ -11,7 +11,7 @@ namespace HelLanhShop.Application.Authentications.Interfaces
     public interface IAuthService
     {
         Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto loginRequestDto);
-        Task<Result<LoginResponseDto>> RefreshTokenAsync(string refreshToken);
+        Task<Result<LoginResponseDto>> RefreshTokenAsync(RefreshRequestDto refreshRequest);
         Task<Result<RegisterResponseDto>> RegisterAsync(RegisterRequestDto registerRequestDto);
         Task<UserAuthDataDto?> GetUserAuthDataAsync(string usernameOrEmail);
 

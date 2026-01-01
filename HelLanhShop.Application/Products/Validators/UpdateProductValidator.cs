@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using HelLanhShop.Application.Common.Validation.Base;
+using HelLanhShop.Application.Common.Validation.Extensions;
 using HelLanhShop.Application.Products.DTOs;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace HelLanhShop.Application.Products.Validators
     {
         public UpdateProductValidator() {
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage("Product Name is required.");
+                .NotEmptyTrim().WithMessage("Product Name is required.");
             RuleFor(x => x.UnitPrice)
                 .GreaterThan(0).WithMessage("Unit Price must be greater than 0.");
             RuleFor(x => x.CostPrice)

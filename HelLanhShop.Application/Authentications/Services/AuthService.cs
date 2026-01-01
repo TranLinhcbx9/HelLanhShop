@@ -2,6 +2,7 @@
 using HelLanhShop.Application.Authentications.DTOs;
 using HelLanhShop.Application.Authentications.Interfaces;
 using HelLanhShop.Application.Authentications.Models;
+using HelLanhShop.Application.Authentications.Validators;
 using HelLanhShop.Application.Common.Enums;
 using HelLanhShop.Application.Common.Interfaces;
 using HelLanhShop.Application.Common.Models;
@@ -22,17 +23,35 @@ namespace HelLanhShop.Application.Authentications.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IJwtTokenService _jwtTokenService;
         private readonly JwtSettings _jwtSettings;
-        public readonly IPasswordHasher _passwordHasher;
+        private readonly IPasswordHasher _passwordHasher;
+        private readonly LoginRequestValidator _loginValidator;
+        private readonly RefreshRequestValidator _refreshTokenValidator;
+        private readonly RegisterRequestValidator _registerValidator;
 
-        public AuthService(IUnitOfWork unitOfWork, IJwtTokenService jwtTokenService, IOptions<JwtSettings> jwtOption, IPasswordHasher passwordHasher)
+        public AuthService(
+            IUnitOfWork unitOfWork, 
+            IJwtTokenService jwtTokenService, 
+            IOptions<JwtSettings> jwtOption, 
+            IPasswordHasher passwordHasher,
+            LoginRequestValidator loginRequestValidator,
+            RefreshRequestValidator refreshRequestValidator,
+            RegisterRequestValidator registerRequestValidator)
         {
             _unitOfWork = unitOfWork;
             _jwtTokenService = jwtTokenService;
             _jwtSettings = jwtOption.Value;
             _passwordHasher = passwordHasher;
+            _loginValidator = loginRequestValidator;
+            _refreshTokenValidator = refreshRequestValidator;
+            _registerValidator = registerRequestValidator;
         }
         public async Task<Result<LoginResponseDto>> LoginAsync(LoginRequestDto requestDto)   
         {
+            var validation = _loginValidator.ValidateToResult(requestDto);
+            if (!validation.IsSuccess)
+            {
+                return Result<LoginResponseDto>.Failure(validation.Error, validation.ErrorType, validation.ErrorCode);
+            }
             var user = await _unitOfWork.Users.GetByUserNameOrEmailAsync(requestDto.UserNameOrEmail);
             if (user == null) return Result<LoginResponseDto>.Failure("User not found", ErrorType.NotFound,ErrorCode.USER_NOT_FOUND);
 
@@ -65,9 +84,14 @@ namespace HelLanhShop.Application.Authentications.Services
             };
             return Result<LoginResponseDto>.Success(responseDto);
         }
-        public async Task<Result<LoginResponseDto>> RefreshTokenAsync(string refreshToken)
+        public async Task<Result<LoginResponseDto>> RefreshTokenAsync(RefreshRequestDto refreshRequest)
         {
-            var rToken = await _unitOfWork.RefreshTokens.GetByTokenAsync(refreshToken);
+            var validation = _refreshTokenValidator.ValidateToResult(refreshRequest);
+            if (!validation.IsSuccess)
+            {
+                return Result<LoginResponseDto>.Failure(validation.Error, validation.ErrorType, validation.ErrorCode);
+            }
+            var rToken = await _unitOfWork.RefreshTokens.GetByTokenAsync(refreshRequest.RefreshToken);
             if (rToken == null || rToken.ExpiryDate < DateTime.UtcNow) return Result<LoginResponseDto>.Failure("Invalid or expired refresh newAccessToken", ErrorType.Unauthorized, ErrorCode.INVALID_CREDENTIALS);
 
             var user = await _unitOfWork.Users.GetByIdAsync(rToken.UserId);
@@ -96,6 +120,11 @@ namespace HelLanhShop.Application.Authentications.Services
         }
         public async Task<Result<RegisterResponseDto>> RegisterAsync(RegisterRequestDto requestDto)
         {
+            var validation = _registerValidator.ValidateToResult(requestDto);
+            if (!validation.IsSuccess)
+            {
+                return Result<RegisterResponseDto>.Failure(validation.Error, validation.ErrorType, validation.ErrorCode);
+            }
             await _unitOfWork.BeginTransactionAsync();
             try
             { 

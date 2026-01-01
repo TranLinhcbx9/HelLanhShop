@@ -27,7 +27,7 @@ namespace HelLanhShop.API.Controllers.Admin.Auth
         [HttpPost("refresh")]
         public async Task<ActionResult<ApiResponse<LoginResponseDto>>> Refresh([FromBody] RefreshRequestDto refreshRequest)
         {
-            var result = await _authService.RefreshTokenAsync(refreshRequest.RefreshToken);
+            var result = await _authService.RefreshTokenAsync(refreshRequest);
             return FromResult(result);
         }
         [HttpPost("register")]

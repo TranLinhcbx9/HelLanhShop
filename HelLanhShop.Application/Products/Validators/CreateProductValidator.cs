@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using HelLanhShop.Application.Common.Validation.Base;
+using HelLanhShop.Application.Common.Validation.Extensions;
 using HelLanhShop.Application.Products.DTOs;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace HelLanhShop.Application.Products.Validators
         public CreateProductValidator()
         {
             RuleFor(x => x.Name)
-                .NotEmpty().WithMessage("Product Name is required")
+                .NotEmptyTrim().WithMessage("Product Name is required")
                 .MaximumLength(200).WithMessage("Name max length is 200");
 
             RuleFor(x => x.UnitPrice)

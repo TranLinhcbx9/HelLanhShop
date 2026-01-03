@@ -7,13 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using HelLanhShop.Application.Common.Interfaces;
 
 namespace HelLanhShop.Infrastructure.Data
 {
     public class HelLanhDBContext :DbContext
     {
-        public HelLanhDBContext(DbContextOptions<HelLanhDBContext> options) : base(options)
+        private readonly ICurrentUser _currentUser;
+        public HelLanhDBContext(DbContextOptions<HelLanhDBContext> options, ICurrentUser? currentUser = null) : base(options)
         {
+            _currentUser = currentUser;
         }
 
         // DbSet các bảng
@@ -72,17 +75,17 @@ namespace HelLanhShop.Infrastructure.Data
 
         public override int SaveChanges()
         {
-            AutoUpdateTime();
+            AutoUpdate();
             RoundDecimalProperties();
             return base.SaveChanges();
         }
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            AutoUpdateTime();
+            AutoUpdate();
             RoundDecimalProperties();
             return await base.SaveChangesAsync(cancellationToken);
         }
-        private void AutoUpdateTime()
+        private void AutoUpdate()
         {
             var entries = ChangeTracker.Entries<BaseEntity>();
 
@@ -91,11 +94,14 @@ namespace HelLanhShop.Infrastructure.Data
                 if (entry.State == EntityState.Added)
                 {
                     entry.Entity.CreatedAt = DateTime.UtcNow;
-                    entry.Entity.UpdatedAt = DateTime.UtcNow;
+                    entry.Entity.CreatedBy = _currentUser?.UserId;
                 }
                 else if (entry.State == EntityState.Modified)
                 {
                     entry.Entity.UpdatedAt = DateTime.UtcNow;
+                    entry.Entity.UpdatedBy = _currentUser?.UserId;
+                    entry.Property(x => x.CreatedAt).IsModified = false;
+                    entry.Property(x => x.CreatedBy).IsModified = false;
                 }
             }
         }

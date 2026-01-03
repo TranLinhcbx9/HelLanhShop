@@ -64,6 +64,10 @@ namespace HelLanhShop.Infrastructure
             //validations
             services.AddValidatorsFromAssemblyContaining<AssemblyMarker>();
 
+            //audit
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUser, CurrentUser>();
+
             return services;
         }
     }

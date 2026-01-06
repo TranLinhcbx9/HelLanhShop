@@ -182,17 +182,35 @@ namespace HelLanhShop.Application.Authentications.Services
         {
             var user = await _unitOfWork.Users.GetUserAuthGraphByUserNameOrEmailAsync(usernameOrEmail);
             if (user == null) return null;
-            var roleNames = user.UserRoles.Select(ur => ur.Role.Name).ToList();
-            var directPermissions = user.UserPermissions.Select(up => up.Permission.Name);
-            var rolePermissions = user.UserRoles.SelectMany(ur => ur.Role.RolePermissions).Select(rp => rp.Permission.Name);
-            var allPermissions = directPermissions.Union(rolePermissions).Distinct().ToList();
+            
+            var roleNames = user.UserRoles
+                .Select(ur => ur.Role.Name)
+                .Distinct()
+                .ToList();
+            //var directPermissions = user.UserPermissions.Select(up => up.Permission.Name);
+            //var rolePermissions = user.UserRoles.SelectMany(ur => ur.Role.RolePermissions).Select(rp => rp.Permission.Name);
+
+            //var allPermissions = directPermissions.Union(rolePermissions).Distinct().ToList();
+
+            //var permissions = user.UserRoles
+            //    .SelectMany(ur => ur.Role.RolePermissions)
+            //    .Select(rp => rp.Permission.Name)
+            //    .Distinct()
+            //    .ToList();
+
+            var permissions = (from ur in user.UserRoles
+                               from rp in ur.Role.RolePermissions
+                               select rp.Permission.Name)
+                              .Distinct()
+                              .ToList();
+
 
             return new UserAuthDataDto        
             {
                 UserId = user.Id,
                 UserName = user.UserName,
                 Roles = roleNames,
-                Permissions = allPermissions
+                Permissions = permissions
             };
         }
     }

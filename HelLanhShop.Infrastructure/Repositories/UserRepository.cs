@@ -28,8 +28,8 @@ namespace HelLanhShop.Infrastructure.Repositories
                             .ThenInclude(ur => ur.Role)
                                 .ThenInclude(r => r.RolePermissions)
                                     .ThenInclude(rp => rp.Permission)
-                        .Include(u => u.UserPermissions)
-                            .ThenInclude(up => up.Permission)
+                        //.Include(u => u.UserPermissions)
+                        //    .ThenInclude(up => up.Permission)
                         .FirstOrDefaultAsync(u => u.UserName == userNameOrEmail || u.Email == userNameOrEmail);
         }
 

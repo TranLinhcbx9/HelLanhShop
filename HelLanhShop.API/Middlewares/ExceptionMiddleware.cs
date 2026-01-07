@@ -1,7 +1,6 @@
 ﻿using HelLanhShop.API.Common.ApiResponses;
 using HelLanhShop.Application.Common.Enums;
 using System.Text.Json;
-using Volo.Abp;
 
 namespace HelLanhShop.API.Middlewares
 {

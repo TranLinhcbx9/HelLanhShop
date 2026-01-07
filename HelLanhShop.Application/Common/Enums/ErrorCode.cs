@@ -19,6 +19,8 @@ namespace HelLanhShop.Application.Common.Enums
         TOKEN_EXPIRED = 3000,
         INVALID_CREDENTIALS = 3001,
         AUTHORIZATION_FAILED = 3002,
+        UNAUTHORIZED = 3003,
+        FORBIDDEN = 3004,
 
         // PRODUCT
         PRODUCT_NOT_FOUND = 4000,

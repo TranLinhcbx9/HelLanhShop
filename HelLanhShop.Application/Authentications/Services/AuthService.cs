@@ -230,7 +230,7 @@ namespace HelLanhShop.Application.Authentications.Services
 
             var permissions = (from ur in user.UserRoles
                                from rp in ur.Role.RolePermissions
-                               select rp.Permission.Name)
+                               select rp.Permission.Code)
                               .Distinct()
                               .ToList();
 

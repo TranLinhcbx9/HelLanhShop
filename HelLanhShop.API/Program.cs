@@ -1,14 +1,17 @@
-﻿using HelLanhShop.API.Middlewares;
+﻿using HelLanhShop.API.Common.ApiResponses;
+using HelLanhShop.API.Middlewares;
 using HelLanhShop.Application.Authentications.Models;
+using HelLanhShop.Application.Common.Authorizations;
+using HelLanhShop.Application.Common.Enums;
 using HelLanhShop.Application.Common.Mappings;
 using HelLanhShop.Infrastructure;
 using HelLanhShop.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
+using Microsoft.OpenApi.Models;
 using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // add middleware custom exception
@@ -56,7 +59,76 @@ builder.Services.AddAuthentication("Bearer")
             IssuerSigningKey = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtSettings.Key))
         };
+        options.Events = new JwtBearerEvents
+        {
+            OnChallenge = context =>
+            {
+                context.HandleResponse();
+
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                context.Response.ContentType = "application/json";
+
+                var response = ApiResponse.Fail(
+                    message: "Unauthorized",
+                    errorType: ErrorType.Unauthorized,
+                    errorCode: ErrorCode.UNAUTHORIZED
+                );
+
+                return context.Response.WriteAsJsonAsync(response);
+            },
+
+            OnForbidden = context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                context.Response.ContentType = "application/json";
+
+                var response = ApiResponse.Fail(
+                    message: "Permission denied",
+                    errorType: ErrorType.Forbidden,
+                    errorCode: ErrorCode.FORBIDDEN
+                );
+
+                return context.Response.WriteAsJsonAsync(response);
+            }
+        };
     });
+builder.Services.AddAuthorization(options =>
+{
+    foreach (var permission in PermissionConstants.All)
+    {
+        options.AddPolicy(permission, policy =>
+        {
+            policy.RequireClaim("permission", permission);
+        });
+    }
+});
+builder.Services.AddSwaggerGen(c =>
+{
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Your Token: {your_token}"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 
 var app = builder.Build();
